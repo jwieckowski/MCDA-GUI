@@ -5,6 +5,9 @@ import Breadcrumbs from '@material-ui/core/Breadcrumbs'
 import { Link } from 'react-router-dom'
 
 import HomeIcon from '@material-ui/icons/Home'
+import FunctionsIcon from '@material-ui/icons/Functions'
+import SubjectIcon from '@material-ui/icons/Subject'
+import MailIcon from '@material-ui/icons/Mail'
 
 const useStyles = makeStyles({
   root: {
@@ -19,7 +22,13 @@ const useStyles = makeStyles({
     justifyContent: 'center',
     alignItems: 'center',
     color: 'inherit',
-    textDecoration: 'none'
+    textDecoration: 'none',
+    '&:hover': {
+      color: 'black'
+    }
+  },
+  icon: {
+    paddingRight: '5px'
   }
 })
 
@@ -28,37 +37,33 @@ const Menu = () => {
 
   return (
     <Grid className={classes.root}>
-      <Breadcrumbs aria-label="breadcrumb">
+      <Breadcrumbs aria-label='breadcrumb'>
         <Link 
-          color="inherit"
-          href="/"
+          to='/'
           className={classes.item}
         >
           <HomeIcon className={classes.icon} />
           <Typography variant='h5'>Home</Typography>
         </Link>
         <Link
-          color="inherit"
-          href="/calculation"
+          to='/calculation'
           className={classes.item}
         >
-          <HomeIcon className={classes.icon} />
+          <FunctionsIcon className={classes.icon} />
           <Typography variant='h5'>Calculation</Typography>
         </Link>
         <Link
-          color="inherit"
-          href="/methods"
+          to='/methods'
           className={classes.item}
         >
-          <HomeIcon className={classes.icon} />
+          <SubjectIcon className={classes.icon} />
           <Typography variant='h5'>Methods</Typography>
         </Link>
         <Link
-          color="inherit"
-          href="/contact"
+          to='/contact'
           className={classes.item}
         >
-          <HomeIcon className={classes.icon} />
+          <MailIcon className={classes.icon} />
           <Typography variant='h5'>Contact</Typography>
         </Link>
       </Breadcrumbs>

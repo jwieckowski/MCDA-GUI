@@ -12,7 +12,7 @@ const useStyles = makeStyles({
   }
 })
 
-const Dashboard = () => {
+const Contact = () => {
   const classes = useStyles()
 //   if (!loading) {
 //     if (!loadError) {
@@ -28,8 +28,8 @@ const Dashboard = () => {
 
   return (
     <Grid className={classes.root}>
-      home
+      contact
     </Grid>
   )
 }
-export default Dashboard
+export default Contact
