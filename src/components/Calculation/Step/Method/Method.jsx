@@ -1,10 +1,13 @@
-import React, { useState } from 'react'
+import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { Grid } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 
 import Typography from '@material-ui/core/Typography'
 import TextField from '@material-ui/core/TextField'
 import MenuItem from '@material-ui/core/MenuItem'
+
+import { setMethod, setNormalization } from './../../../../data/actions/calculations.js'
 
 const useStyles = makeStyles({
   root: {
@@ -19,35 +22,26 @@ const useStyles = makeStyles({
   }
 })
 
-const methods = ['TOPSIS', 'COMET', 'VIKOR', 'SPOTIS', 'COPRAS', 'AHP', 'PROMETHEE']
+const methods = ['TOPSIS', 'COMET', 'VIKOR', 'SPOTIS', 'COPRAS', 'PROMETHEE']
 
 const Method = () => {
   const classes = useStyles()
-  const [method, setMethod] = useState('TOPSIS')
+  const dispatch = useDispatch()
+
+  const { method } = useSelector((state) => state.calculations)
 
   const handleChange = (event) => {
-    setMethod(event.target.value)
+    dispatch(setMethod(event.target.value))
+    dispatch(setNormalization(undefined))
   }
-  //   if (!loading) {
-//     if (!loadError) {
-//       content = (
-//         <Grid container maxwidth='xs' className={classes.root}>
-//           {switchContent(location.pathname, data)}
-//         </Grid>
-//       )
-//     } else {
-//       content = <Page404 />
-//     }
-//   }
 
   return (
     <Grid>
       <TextField
           select
           label="MCDA method"
-          value={method}
+          value={method === undefined ? '' : method}
           onChange={handleChange}
-          // helperText="Please select MCDA method"
           variant="outlined"
           className={classes.input}
         >

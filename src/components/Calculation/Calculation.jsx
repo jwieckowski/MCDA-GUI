@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { Grid } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 
@@ -6,12 +7,12 @@ import Stepper from '@material-ui/core/Stepper'
 import Step from '@material-ui/core/Step'
 import StepLabel from '@material-ui/core/StepLabel'
 import StepContent from '@material-ui/core/StepContent'
-import Button from '@material-ui/core/Button'
-import Paper from '@material-ui/core/Paper'
-import Typography from '@material-ui/core/Typography'
 
 import Summary from './Summary'
 import MyStep from './Step'
+import Results from './Results'
+
+import { checkForm, resetForm, getResults } from './../../data/actions/calculations.js'
 
 const useStyles = makeStyles({
   root: {
@@ -22,30 +23,52 @@ const useStyles = makeStyles({
     justifyContent: 'center',
     flexDirection: 'column'
   },
-  stepper: {
+  content: {
     width: '80%',
     height: '70%',
-    // overflow: 'auto'
-    // backgroundColor: 'yellow'
   },
   step: {
     width: '100%',
-    // backgroundColor: 'blue'
   }
 })
 
-function getSteps() {
-  return ['Metoda MCDA', 'Normalizacja', 'Macierz decyzyjna', 'Wagi i typ kryteriów']
-}
+const initialSteps = ['Metoda MCDA', 'Normalizacja', 'Macierz decyzyjna', 'Wagi i typ kryteriów']
 
 const Calculation = () => {
   const classes = useStyles()
+  const dispatch = useDispatch()
 
+  const { method, normalization, alternatives, criteria, matrix, weightsValue, weightsType, weightsMethod, preferenceFunction, formFilled } = useSelector((state) => state.calculations)
+
+  const [steps, setSteps] = useState(initialSteps)
   const [activeStep, setActiveStep] = React.useState(0)
-  const steps = getSteps()
 
+  const showFormInfo = () => {
+    let message = method === undefined ? 'Należy wybrać metodę\n' : ''
+    message += (normalization === undefined  && preferenceFunction === undefined) ? 'Należy wybrać normalizację lub funckję preferencji\n': ''
+    message += alternatives === undefined ? 'Należy podać ilość alertnatyw\n': ''
+    message += criteria === undefined ? 'Należy podać ilość kryteriów\n': ''
+    if (matrix !== undefined) {
+      message += (matrix.reduce((total, array) => {
+        return total + array.reduce((sum, current) => sum + current)
+      })[0] === 0) ? 'Należy wypełnić macierz decyzyjną\n': ''
+    }
+    if (weightsMethod === undefined) {
+      if (weightsValue !== undefined) { 
+        message += (weightsValue.reduce((total, current) => total + current) !== 1)
+          ? 'Suma wag w wektorze wag powinna wynosić 1\n' : ''
+      }
+    }
+    console.log(message)
+    message !== '' && window.alert(message)
+  }
+  
   const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1)
+    if (activeStep + 1 === steps.length) {
+      dispatch(checkForm())
+    } else {
+      setActiveStep((prevActiveStep) => prevActiveStep + 1)
+    }
   }
 
   const handleBack = () => {
@@ -53,8 +76,42 @@ const Calculation = () => {
   }
 
   const handleReset = () => {
+    dispatch(resetForm())
     setActiveStep(0)
   }
+
+  const sendData = () => {
+    dispatch(getResults({
+      method,
+      normalization,
+      alternatives,
+      criteria,
+      matrix,
+      weightsType,
+      weightsValue,
+      preferenceFunction
+    }))
+    setActiveStep((prevActiveStep) => prevActiveStep + 1)
+  }
+
+  useEffect(() => {
+    if (activeStep + 1 === steps.length) {
+      formFilled 
+        ? sendData()
+        : showFormInfo()
+    }
+  }, [formFilled])
+
+  useEffect(() => {
+    method === 'PROMETHEE'
+      ? setSteps(steps.map((step, index) => {
+        return index === 1
+          ? 'Funkcja preferencji'
+          : step
+      }))
+      : setSteps(initialSteps)
+  }, [method])
+  
 //   if (!loading) {
 //     if (!loadError) {
 //       content = (
@@ -70,33 +127,33 @@ const Calculation = () => {
   return (
     <Grid className={classes.root}>
       <Summary />
-      <Stepper
-        activeStep={activeStep}
-        orientation="vertical"
-        className={classes.stepper}
-      >
-        {steps.map((label, index) => (
-          <Step key={label} className={classes.step}>
-            <StepLabel>{label}</StepLabel>
-            <StepContent>
-              <MyStep 
-                handleBack={handleBack}
-                handleNext={handleNext}
-                activeStep={activeStep}
-                length={steps.length}
-              />
-            </StepContent>
-          </Step>
-        ))}
-      </Stepper>
-      {activeStep === steps.length && (
-        <Paper square elevation={0} className={classes.resetContainer}>
-          <Typography>All steps completed - you&apos;re finished</Typography>
-          <Button onClick={handleReset} className={classes.button}>
-            Reset
-          </Button>
-        </Paper>
-      )}
+      {
+        !formFilled
+        ? <>
+          <Stepper
+            activeStep={activeStep}
+            orientation="vertical"
+            className={classes.content}
+          >
+            {steps.map((label, index) => (
+              <Step key={label} className={classes.step}>
+                <StepLabel>{label}</StepLabel>
+                <StepContent>
+                  <MyStep 
+                    handleBack={handleBack}
+                    handleNext={handleNext}
+                    activeStep={activeStep}
+                    length={steps.length}
+                  />
+                </StepContent>
+              </Step>
+            ))}
+          </Stepper>
+        </>
+        : <Results
+            handleReset={handleReset}
+          />
+      }
     </Grid>
   )
 }

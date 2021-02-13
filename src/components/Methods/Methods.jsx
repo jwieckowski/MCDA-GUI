@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 
+import methods from './../../public/methods.js'
 import Panel from './Panel'
 
 const useStyles = makeStyles({
@@ -46,21 +47,24 @@ const Methods = () => {
         aria-label="Method tabs"
         className={classes.tabs}
       >
-        <Tab label='TOPSIS' />
-        <Tab label='COMET' />
-        <Tab label='VIKOR' />
-        <Tab label='SPOTIS' />
-        <Tab label='COPRAS' />
-        <Tab label='AHP' />
-        <Tab label='PROMETHEE' />
+        {methods.map(method => {
+          return (
+            <Tab label={method.method} key={method.id}/>
+          )
+        })}
       </Tabs>
-      <Panel value={active} index={0} />
-      <Panel value={active} index={1} />
-      <Panel value={active} index={2} />
-      <Panel value={active} index={3} />
-      <Panel value={active} index={4} />
-      <Panel value={active} index={5} />
-      <Panel value={active} index={6} />
+      {methods.map((method, index) => {
+        return (
+          <Panel
+            key={index}
+            value={active}
+            index={index}
+            method={method.method}
+            abbreviation={method.abbreviation}
+            images={method.images}
+          />
+        )
+      })}
     </Grid>
   )
 }

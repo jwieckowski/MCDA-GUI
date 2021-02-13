@@ -1,4 +1,5 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 import { Grid } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 
@@ -25,18 +26,30 @@ const useStyles = makeStyles({
 
 const Summary = () => {
   const classes = useStyles()
+  const info = useSelector((state) => state.calculations)
+
+  const getInfo = () => {
+    return (
+      <Typography variant='h5'>
+        { info.method !== 'PROMETHEE'
+          ? <>Normalization: {info.normalization === undefined ? '' : info.normalization}</>
+          : <>Preference: {info.preferenceFunction === undefined ? '' : info.preferenceFunction}</>
+        }
+      </Typography>
+    )  
+  }
 
   return (
     <Grid className={classes.root}>
       <Grid className={classes.info}>
-        <Typography variant='h5'>MCDA method: TOPSIS</Typography>
-        <Typography variant='h5'>Normalization: none / minmax</Typography>
-        <Typography variant='h5'>Decision matrix: input / file</Typography>
+        <Typography variant='h5'>MCDA method: {info.method === undefined ? '' : info.method}</Typography>
+        {getInfo()}
+        <Typography variant='h5'>Decision matrix: {info.matrixFile === undefined ? 'input' : 'file'}</Typography>
       </Grid>
       <Grid className={classes.info}>
-        <Typography variant='h5'>Alternatives: 10</Typography>
-        <Typography variant='h5'>Criteria: 5</Typography>
-        <Typography variant='h5'>Criteria weights: input / method</Typography>
+        <Typography variant='h5'>Alternatives: {info.alternatives === undefined ? '' : info.alternatives}</Typography>
+        <Typography variant='h5'>Criteria: {info.criteria === undefined ? '' : info.criteria}</Typography>
+        <Typography variant='h5'>Criteria weights: {info.weightsMethod === undefined ? 'input' : info.weightsMethod}</Typography>
       </Grid>
     </Grid>
   )

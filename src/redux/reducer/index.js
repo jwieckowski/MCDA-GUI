@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux'
 
-// This is the place for future reducers to combine them all
+import calculations from './../../data/reducers/calculations.js'
 
 export default combineReducers({
-
+  calculations
 })

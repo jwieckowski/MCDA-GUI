@@ -1,9 +1,12 @@
-import React, { useState } from 'react'
+import React, { useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import { Grid, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 
 import TextField from '@material-ui/core/TextField'
 import Settings from './Settings'
+
+import { setMatrix } from './../../../../data/actions/calculations.js'
 
 const useStyles = makeStyles({
   root: {
@@ -40,50 +43,43 @@ const useStyles = makeStyles({
   }
 })
 
-const initialSize = {
-  alternatives: 1,
-  criteria: 1
-}
-
 const Matrix = () => {
   const classes = useStyles()
-  const [option, setOption] = useState(false)
-  const [matrixSize, setMatrixSize] = useState(initialSize)
-  const [file, uploadFile] = useState(undefined)
+  const dispatch = useDispatch()
 
-  const handleSwitch = (event) => {
-    setOption(!option)
+  const { alternatives, criteria, matrix } = useSelector((state) => state.calculations)
+
+  useEffect(() => {
+    if (matrix !== undefined && alternatives === matrix.length && criteria === matrix[0].length) return
+    if (Number.isNaN(alternatives) || Number.isNaN(criteria)) return
+    dispatch(setMatrix([...Array(alternatives)].map(() => Array(criteria).fill(0))))
+  }, [criteria, alternatives])
+
+  const handleInput = (event, row, col) => {
+    dispatch(setMatrix(matrix.map((r, index) => {
+      return index === row
+        ? r.map((c, ind) => ind === col ? parseFloat(event.target.value) : c)
+        : r
+    })))
   }
 
-  const handleChange = (event, option) => {
-    option === 1
-      ? setMatrixSize({
-        alternatives: parseInt(event.target.value),
-        criteria: matrixSize.criteria
-      })
-      : setMatrixSize({
-        alternatives: matrixSize.alternatives,
-        criteria: parseInt(event.target.value)
-      })
-  }
-
-  const handleUpload = (event) => {
-    uploadFile(event.target.value)
-  }
-
-
-  const getColumns = () => {
+  const getColumns = (row) => {
     const content = []
-    for (let i = 0; i < matrixSize.criteria; i++) {
+    for (let i = 0; i < criteria; i++) {
       content.push(
         <TextField
             key={i}
             type="number"
+            value={matrix === undefined ? 0 : matrix[row][i]}
             InputLabelProps={{
                 shrink: true,
             }}
+            inputProps={{
+              min: 0
+            }}
             variant="outlined"
             className={classes.column}
+            onChange={(e) => handleInput(e, row, i)}
           />
       )
     }
@@ -91,14 +87,14 @@ const Matrix = () => {
   }
 
   const getRows = () => {
-    if (matrixSize.alternatives === 0 || matrixSize.criteria === 0) return
+    if (alternatives === undefined || criteria === undefined) return
     const content = []
 
-    for (let i = 0; i < matrixSize.alternatives; i++) {
+    for (let i = 0; i < alternatives; i++) {
       content.push(
         <Grid className={classes.row} key={i}>
           <Grid className={classes.label}><Typography>A{i+1}</Typography></Grid>
-          {getColumns().map(column => column)}
+          {getColumns(i).map(column => column)}
         </Grid>
       )
     }
@@ -119,12 +115,7 @@ const Matrix = () => {
   return (
     <Grid className={classes.root}>
       <Grid>
-        <Settings
-          option={option}
-          handleSwitch={handleSwitch}
-          handleChange={handleChange}
-          handleUpload={handleUpload}
-        />
+        <Settings />
         <Grid className={classes.matrix}>
           {getRows()}
         </Grid>

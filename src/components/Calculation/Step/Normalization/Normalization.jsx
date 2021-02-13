@@ -1,10 +1,13 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { Grid } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 
 import Typography from '@material-ui/core/Typography'
 import TextField from '@material-ui/core/TextField'
 import MenuItem from '@material-ui/core/MenuItem'
+
+import { setNormalization, setPreferenceFunction } from './../../../../data/actions/calculations.js'
 
 const useStyles = makeStyles({
   root: {
@@ -19,43 +22,53 @@ const useStyles = makeStyles({
   }
 })
 
-const methods = ['minmax', 'max', 'sum', 'vector', 'logarithmic']
+const noneNormalizationMCDA = ['COMET', 'SPOTIS', 'COPRAS', 'PROMETHEE']
+const preferenceFunctions = ['usual', 'vshape', 'ushape', 'level', 'vshape_2']
 
 const Normalization = () => {
   const classes = useStyles()
-  const [method, setMethod] = useState('minmax')
+  const dispatch = useDispatch()
+  const [methods, setMethods] = useState([])
+
+  const { method, normalization, preferenceFunction } = useSelector((state) => state.calculations)
 
   const handleChange = (event) => {
-    setMethod(event.target.value)
+    method !== 'PROMETHEE'
+      ? dispatch(setNormalization(event.target.value))
+      : dispatch(setPreferenceFunction(event.target.value))
   }
-  //   if (!loading) {
-//     if (!loadError) {
-//       content = (
-//         <Grid container maxwidth='xs' className={classes.root}>
-//           {switchContent(location.pathname, data)}
-//         </Grid>
-//       )
-//     } else {
-//       content = <Page404 />
-//     }
-//   }
+
+  const getValue = () => {
+    return method !== 'PROMETHEE'
+      ? normalization === undefined ? '' : normalization
+      : preferenceFunction === undefined ? '' : preferenceFunction
+  }
+
+  const getItems = (array) => {
+    return array.map((option) => (
+      <MenuItem key={option} value={option}>
+        <Typography>{option}</Typography>
+      </MenuItem>
+    ))
+  }
+
+  useEffect(() => {
+    noneNormalizationMCDA.includes(method)
+      ? setMethods(['none'])
+      : setMethods(['minmax', 'max', 'sum', 'vector', 'logarithmic', 'none'])
+  }, [])
 
   return (
     <Grid>
       <TextField
           select
-          label="Normalization method"
-          value={method}
+          label={method !== 'PROMETHEE' ? 'Normalization method' : 'Preference function'}
+          value={getValue()}
           onChange={handleChange}
-          // helperText="Please select MCDA method"
           variant="outlined"
           className={classes.input}
         >
-          {methods.map((option) => (
-            <MenuItem key={option} value={option}>
-              <Typography>{option}</Typography>
-            </MenuItem>
-          ))}
+          {method !== 'PROMETHEE' ? getItems(methods): getItems(preferenceFunctions)}
         </TextField>
     </Grid>
   )

@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { Grid } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 
@@ -7,6 +8,8 @@ import MenuItem from '@material-ui/core/MenuItem'
 import Typography from '@material-ui/core/Typography'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Switch from '@material-ui/core/Switch'
+
+import { setWeightsType, setWeightsValue, setWeightsMethod } from './../../../../data/actions/calculations.js'
 
 const useStyles = makeStyles({
   root: {
@@ -33,35 +36,58 @@ const useStyles = makeStyles({
   }
 })
 
+const types = ['Profit', 'Cost']
+const methods = ['Equal', 'Entropy', 'Standard deviation']
+
+const isSumCorrect = (weights, index, newValue) => {
+  const sum = weights.reduce((total, current) => total + current)
+  let diff = newValue - weights[index]
+  if ((sum + diff) > 1) {
+    return false
+  } else return true 
+}
+
 const Criteria = () => {
   const classes = useStyles()
-  const [type, setType] = useState(['Profit','Profit','Profit','Profit','Profit','Profit','Profit'])
+  const dispatch = useDispatch()
   const [option, setOption] = useState(false)
-  const [method, setMethod] = useState('Equal')
-  const types = ['Profit', 'Cost']
-  const methods = ['Equal', 'Entropy', 'Standard deviation']
+
+  const { weightsType, weightsValue, weightsMethod, criteria } = useSelector((state) => state.calculations)
 
   const handleChange = (event, index) => {
-    setType(type.map((val, ind) => ind === index ? event.target.value : val))
+    dispatch(setWeightsType(weightsType.map((val, ind) => ind === index ? event.target.value : val)))
+  }
+
+  const handleInput = (event, index) => {
+    if(!isSumCorrect(weightsValue, index, event.target.value)) return
+    dispatch(setWeightsValue(weightsValue.map((val, ind) => ind === index ? parseFloat(event.target.value) : val)))
   }
 
   const handleSwitch = (event) => {
     setOption(!option)
+    dispatch(setWeightsMethod(undefined))
   }
 
   const handleSelect = (event) => {
-    setMethod(event.target.value)
+    dispatch(setWeightsMethod(event.target.value))
   }
+
+  useEffect(() => {
+    if (criteria === undefined || (weightsType !== undefined && criteria === weightsType.length)) return
+    const elements = Array.apply(0, { length: criteria })
+    dispatch(setWeightsType(elements.map(m => 'Profit')))
+    dispatch(setWeightsValue(elements.map(m => 0)))
+  }, [criteria])
 
   const getTypesColumns = () => {
     const content = []
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < criteria; i++) {
       content.push(
         <TextField
+          key={i}
           select
-          value={type[i]}
-          onChange={handleChange}
-          // helperText="Please select MCDA method"
+          value={weightsType === undefined ? types[0] : weightsType[i]}
+          onChange={(e) => handleChange(e, i)}
           variant="outlined"
           className={classes.column}
         >
@@ -78,16 +104,23 @@ const Criteria = () => {
 
   const getWeightsColumns = () => {
     const content = []
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < criteria; i++) {
       content.push(
         <TextField
             key={i}
             type={"number"}
+            value={weightsValue === undefined ? 0 : weightsValue[i]}
             InputLabelProps={{
                 shrink: true,
             }}
+            inputProps={{
+              min: 0,
+              max: 1,
+              step: 0.01
+            }}
             variant="outlined"
             className={classes.column}
+            onChange={(e) => handleInput(e, i)}
           />
       )
     }
@@ -109,34 +142,42 @@ const Criteria = () => {
           label={option ? 'Wprowadź wagi' : 'Wybierz metodę'}
         />
       </Grid>
-      <Grid className={classes.row}>
-        <Grid className={classes.label}>
-          <Typography>Typy</Typography>
+      {
+        criteria ?
+        <>
+          <Grid className={classes.row}>
+            <Grid className={classes.label}>
+              <Typography>Typy</Typography>
+            </Grid>
+            {getTypesColumns().map(column => column)}
+          </Grid>
+          <Grid className={classes.row}>
+            <Grid className={classes.label}>
+              <Typography>Wagi</Typography>
+            </Grid>
+            {!option
+              ?  getWeightsColumns().map(column => column)
+              : <TextField
+                  select
+                  value={weightsMethod}
+                  onChange={handleSelect}
+                  variant="outlined"
+                  className={classes.select}
+                >
+                  {methods.map((option) => (
+                    <MenuItem key={option} value={option}>
+                      <Typography>{option}</Typography>
+                    </MenuItem>
+                  ))}
+                </TextField>
+            }
         </Grid>
-        {getTypesColumns().map(column => column)}
-      </Grid>
+      </>
+      :
       <Grid className={classes.row}>
-        <Grid className={classes.label}>
-          <Typography>Wagi</Typography>
-        </Grid>
-        {!option
-          ?  getWeightsColumns().map(column => column)
-          : <TextField
-              select
-              value={method}
-              onChange={handleSelect}
-              // helperText="Please select MCDA method"
-              variant="outlined"
-              className={classes.select}
-            >
-              {methods.map((option) => (
-                <MenuItem key={option} value={option}>
-                  <Typography>{option}</Typography>
-                </MenuItem>
-              ))}
-            </TextField>
-        }
+        <Typography>Zdefiniuj ilość kryteriów</Typography>
       </Grid>
+      }
     </Grid>
   )
 }
