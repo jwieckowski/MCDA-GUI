@@ -159,7 +159,7 @@ const Criteria = () => {
               ?  getWeightsColumns().map(column => column)
               : <TextField
                   select
-                  value={weightsMethod}
+                  value={weightsMethod === undefined ? '' : weightsMethod}
                   onChange={handleSelect}
                   variant="outlined"
                   className={classes.select}

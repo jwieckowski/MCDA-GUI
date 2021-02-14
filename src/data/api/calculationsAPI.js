@@ -8,8 +8,10 @@ export function * getResults (data) {
       alternatives: data.alternatives,
       criteria: data.criteria,
       matrix: data.matrix,
+      matrixFile: data.matrixFile,
       weightsType: data.weightsType,
       weightsValue: data.weightsValue,
+      weightsMethod: data.weightsMethod === undefined ? data.weightsMethod : data.weightsMethod.toLowerCase(),
       preferenceFunction: data.preferenceFunction
     }
   })

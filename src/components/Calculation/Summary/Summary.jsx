@@ -20,7 +20,8 @@ const useStyles = makeStyles({
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'space-between',
-      alignItems: 'start'
+      alignItems: 'start',
+      marginLeft: '20%'
   }
 })
 

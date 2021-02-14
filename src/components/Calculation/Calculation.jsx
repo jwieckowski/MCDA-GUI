@@ -38,7 +38,7 @@ const Calculation = () => {
   const classes = useStyles()
   const dispatch = useDispatch()
 
-  const { method, normalization, alternatives, criteria, matrix, weightsValue, weightsType, weightsMethod, preferenceFunction, formFilled } = useSelector((state) => state.calculations)
+  const { method, normalization, alternatives, criteria, matrix, matrixFile, weightsValue, weightsType, weightsMethod, preferenceFunction, formFilled } = useSelector((state) => state.calculations)
 
   const [steps, setSteps] = useState(initialSteps)
   const [activeStep, setActiveStep] = React.useState(0)
@@ -59,13 +59,13 @@ const Calculation = () => {
           ? 'Suma wag w wektorze wag powinna wynosić 1\n' : ''
       }
     }
-    console.log(message)
     message !== '' && window.alert(message)
   }
   
   const handleNext = () => {
     if (activeStep + 1 === steps.length) {
       dispatch(checkForm())
+      showFormInfo()
     } else {
       setActiveStep((prevActiveStep) => prevActiveStep + 1)
     }
@@ -87,8 +87,10 @@ const Calculation = () => {
       alternatives,
       criteria,
       matrix,
+      matrixFile,
       weightsType,
       weightsValue,
+      weightsMethod,
       preferenceFunction
     }))
     setActiveStep((prevActiveStep) => prevActiveStep + 1)
@@ -96,9 +98,7 @@ const Calculation = () => {
 
   useEffect(() => {
     if (activeStep + 1 === steps.length) {
-      formFilled 
-        ? sendData()
-        : showFormInfo()
+      formFilled && sendData()
     }
   }, [formFilled])
 
@@ -112,18 +112,6 @@ const Calculation = () => {
       : setSteps(initialSteps)
   }, [method])
   
-//   if (!loading) {
-//     if (!loadError) {
-//       content = (
-//         <Grid container maxwidth='xs' className={classes.root}>
-//           {switchContent(location.pathname, data)}
-//         </Grid>
-//       )
-//     } else {
-//       content = <Page404 />
-//     }
-//   }
-
   return (
     <Grid className={classes.root}>
       <Summary />

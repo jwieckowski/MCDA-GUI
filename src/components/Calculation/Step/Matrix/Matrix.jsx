@@ -47,9 +47,10 @@ const Matrix = () => {
   const classes = useStyles()
   const dispatch = useDispatch()
 
-  const { alternatives, criteria, matrix } = useSelector((state) => state.calculations)
+  const { alternatives, criteria, matrix, matrixFile } = useSelector((state) => state.calculations)
 
   useEffect(() => {
+    if (matrixFile !== undefined) return
     if (matrix !== undefined && alternatives === matrix.length && criteria === matrix[0].length) return
     if (Number.isNaN(alternatives) || Number.isNaN(criteria)) return
     dispatch(setMatrix([...Array(alternatives)].map(() => Array(criteria).fill(0))))
@@ -100,17 +101,6 @@ const Matrix = () => {
     }
     return content
   }
-  //   if (!loading) {
-//     if (!loadError) {
-//       content = (
-//         <Grid container maxwidth='xs' className={classes.root}>
-//           {switchContent(location.pathname, data)}
-//         </Grid>
-//       )
-//     } else {
-//       content = <Page404 />
-//     }
-//   }
 
   return (
     <Grid className={classes.root}>

@@ -3,12 +3,13 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Grid } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 
+import { ExcelRenderer } from 'react-excel-renderer'
 import Input from '@material-ui/core/Input'
 import TextField from '@material-ui/core/TextField'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Switch from '@material-ui/core/Switch'
 
-import { setAlternatives, setCriteria, setMatrixFile } from './../../../../../data/actions/calculations.js'
+import { setAlternatives, setCriteria, setMatrix, setMatrixFile } from './../../../../../data/actions/calculations.js'
 
 const useStyles = makeStyles({
   root: {
@@ -26,7 +27,7 @@ const Settings = () => {
   const dispatch = useDispatch()
   const [option, setOption] = useState(false)
 
-  const { alternatives, criteria, matrixFile } = useSelector((state) => state.calculations)
+  const { alternatives, criteria } = useSelector((state) => state.calculations)
 
   const handleSwitch = (event) => {
     setOption(!option)
@@ -36,7 +37,17 @@ const Settings = () => {
   }
 
   const handleUpload = (event) => {
-    dispatch(setMatrixFile(event.target.value))
+    ExcelRenderer(event.target.files[0], (err, resp) => {
+      if (err) {
+        console.log(err)
+        window.alert('Błąd przy wczytywaniu pliku')
+      } else {
+        dispatch(setMatrixFile(event.target.files[0]))
+        dispatch(setMatrix(resp.rows))
+        dispatch(setAlternatives(resp.rows.length))
+        dispatch(setCriteria(resp.rows[0].length))
+      }
+    })
   }
 
   const handleAlternatives = (event) => {
@@ -46,7 +57,6 @@ const Settings = () => {
   const handleCriteria = (event) => {
     dispatch(setCriteria(Number.isNaN(parseInt(event.target.value)) ? 1 : parseInt(event.target.value)))
   }
-
 
   return (
     <Grid className={classes.root}>

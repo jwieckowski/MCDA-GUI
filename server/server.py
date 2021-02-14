@@ -40,7 +40,7 @@ correlation_methods = {
 weights_methods = {
     'equal': pymcdm.weights.equal,
     'entropy': pymcdm.weights.entropy,
-    'standard_deviation': pymcdm.weights.standard_deviation
+    'standard deviation': pymcdm.weights.standard_deviation
 }
 
 all_info = {
@@ -80,6 +80,9 @@ def calc_comet(matrix, weights, types):
                            rate_function=pymcdm.methods.COMET.topsis_rate_function(weights, types))
     result = method(matrix)
     return result
+
+def calc_weights(matrix, method):
+    return np.ones(matrix.shape[1]) / matrix.shape[1] if method == 'equal' else weights_methods[method](matrix)
 
 def calculate_results(method, normalization, matrix, weights, types, pref_func=None):
 
@@ -128,10 +131,15 @@ def results():
     matrix = request.args.getlist('matrix[]')
     weightsType = request.args.getlist('weightsType[]')
     weightsValue = request.args.getlist('weightsValue[]')
+    weightsMethod = request.args.get('weightsMethod')
     preferenceFunction = request.args.get('preferenceFunction')
 
     m = np.array([m.strip('][').split(',') for m in matrix]).astype(np.float)
-    w = np.array([float(w) for w in weightsValue])
+    w = []
+    if weightsMethod == 'None':
+        w = np.array([float(w) for w in weightsValue])
+    else:
+        w = calc_weights(m, weightsMethod)
     t = np.array([1 if t == 'Profit' else -1 for t in weightsType])
 
     result = calculate_results(method, normalization, m, w, t, preferenceFunction)
