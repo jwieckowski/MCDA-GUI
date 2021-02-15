@@ -38,10 +38,10 @@ const useStyles = makeStyles({
     display: 'flex',
     alignItems: 'center'
   },
-  reset: {
+  buttons: {
     width: '100%',
     display: 'flex',
-    justifyContent: 'flex-end'
+    justifyContent: 'space-between'
   },
   row: {
     display: 'flex',
@@ -56,22 +56,60 @@ const inverseMethods = ['VIKOR', 'SPOTIS']
 
 const rankData = (preferences) => {
   const sorted = [...preferences].sort().reverse()
-  return preferences.map((p, ind) => sorted.indexOf(p)+1)
+  return preferences.map(p => sorted.indexOf(p)+1)
 }
 
 const rankInverseData = (preferences) => {
   const sorted = [...preferences].sort()
-  return preferences.map((p, ind) => sorted.indexOf(p)+1)
+  return preferences.map(p => sorted.indexOf(p)+1)
+}
+
+const getRankings = (method, results, alternatives) => {
+  if (results.includes('NaN')) return Array(alternatives).fill(0)
+  return inverseMethods.includes(method) 
+    ? rankInverseData(results)
+    : rankData(results)
 }
 
 const Results = ({ handleReset }) => {
   const classes = useStyles()
   const [option, setOption] = useState(false)
 
-  const { method, results, fetchingResults, resultsError } = useSelector((state) => state.calculations)
+  const { method, alternatives, results, fetchingResults, resultsError } = useSelector((state) => state.calculations)
 
   const handleSwitch = () => {
     setOption(!option)
+  }
+
+  const handleSave = () => {
+    const data = {
+      method,
+      results,
+      rankings: getRankings(method, results, alternatives)
+    }
+
+    if (window.localStorage['results']) {
+      const storage = [
+        data,
+        ...JSON.parse(window.localStorage['results'])
+      ]
+      window.localStorage.setItem('results', JSON.stringify(storage))
+    } else {
+      window.localStorage.setItem('results', JSON.stringify([data]))  
+    }
+    window.alert('Zapisano wyniki')
+  }
+
+  // console.log(window.localStorage.removeItem('results'))
+
+  const showHistory = () => {
+    if (window.localStorage['results']) {
+      JSON.parse(window.localStorage['results']).map(r => {
+        console.log(r)
+      })
+    } else {
+      console.log('no history recorded')
+    }
   }
 
   const getRows = () => {
@@ -89,8 +127,8 @@ const Results = ({ handleReset }) => {
       </Grid>
     )
 
-    const rankings = inverseMethods.includes(method) ? rankInverseData(results) : rankData(results)
-    for (let i = 0; i < results.length; i++) {
+    const rankings = getRankings(method, results, alternatives)
+    for (let i = 0; i < rankings.length; i++) {
       content.push(
         <Grid 
           className={classes.row}
@@ -142,11 +180,19 @@ const Results = ({ handleReset }) => {
     <Grid className={classes.root}> 
       <Grid className={classes.content}>
         {content}
-        <Grid className={classes.reset}>
+        <Grid className={classes.buttons}>
+          <Button onClick={showHistory} className={classes.button}>
+            <Typography>Historia</Typography>
+          </Button>
+          <Grid>
+            <Button onClick={handleSave} className={classes.button}>
+              <Typography>Zapisz</Typography>
+            </Button>
             <Button onClick={handleReset} className={classes.button}>
               <Typography>Reset</Typography>
             </Button>
           </Grid>
+        </Grid>
       </Grid>
     </Grid>
   )

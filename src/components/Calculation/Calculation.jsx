@@ -124,7 +124,7 @@ const Calculation = () => {
             className={classes.content}
           >
             {steps.map((label, index) => (
-              <Step key={label} className={classes.step}>
+              <Step key={index} className={classes.step}>
                 <StepLabel>{label}</StepLabel>
                 <StepContent>
                   <MyStep 
