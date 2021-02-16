@@ -31,10 +31,10 @@ normalization_methods = {
 correlation_methods = {
     'spearman': pymcdm.correlations.spearman,
     'pearson': pymcdm.correlations.pearson,
-    'weighted_spearman': pymcdm.correlations.weighted_spearman,
-    'rank_similarity_coef': pymcdm.correlations.rank_similarity_coef,
-    'kendall_tau': pymcdm.correlations.kendall_tau,
-    'goodman_kruskal_gamma': pymcdm.correlations.goodman_kruskal_gamma
+    'weighted spearman': pymcdm.correlations.weighted_spearman,
+    'rank similarity coef': pymcdm.correlations.rank_similarity_coef,
+    'kendall tau': pymcdm.correlations.kendall_tau,
+    'goodman kruskal gamma': pymcdm.correlations.goodman_kruskal_gamma
 }
 
 weights_methods = {
@@ -110,17 +110,36 @@ def home():
 def methods():
     return jsonify(all_info['methods'])
 
-@app.route('/normalizations', methods=['GET'])
-def normalizations():
+@app.route('/normalizationsMethods', methods=['GET'])
+def normalizationsMethods():
     return jsonify(all_info['normalizations'])
+
+@app.route('/correlationsMethods', methods=['GET'])
+def correlationsMethods():
+    return jsonify(all_info['correlations'])
+
+@app.route('/weightsMethods', methods=['GET'])
+def weightsMethods():
+    return jsonify(all_info['weights'])
 
 @app.route('/correlations', methods=['GET'])
 def correlations():
-    return jsonify(all_info['correlations'])
+    method = request.args.get('method')
+    results = request.args.getlist('results[]')
+    rankings = request.args.getlist('rankings[]')
 
-@app.route('/weights', methods=['GET'])
-def weights():
-    return jsonify(all_info['weights'])
+    res = np.array([r.strip('][').split(',') for r in results]).astype(np.float)
+    rank = np.array([r.strip('][').split(',') for r in rankings]).astype(np.float)
+    correlations = []
+    if method == 'pearson':
+        correlations = np.array([[correlation_methods[method](r1, r2) for r2 in res] for r1 in res])
+    else:
+        correlations = np.array([[correlation_methods[method](r1, r2) for r2 in rank] for r1 in rank])
+
+    print(method)
+    print(correlations)
+
+    return jsonify(correlations.tolist())
 
 @app.route('/results', methods=['GET'])
 def results():

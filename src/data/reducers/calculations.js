@@ -12,9 +12,18 @@ const initialState = {
     matrixFile: undefined,
     preferenceFunction: undefined,
     formFilled: false,
+
     results: undefined,
     fetchingResults: false,
-    resultsError: undefined
+    resultsError: undefined,
+    
+    correlationsMethod: undefined,
+    correlationsResults: undefined,
+    correlationsRankings: undefined,
+
+    correlations: undefined,
+    fetchingCorrelations: false,
+    correlationsError: undefined
 }
 
 const setMethod = (state, action) => {
@@ -140,6 +149,57 @@ const getResultsFail = (state, action) => {
   }
 }
 
+const setCorrelationsMethod = (state, action) => {
+  return {
+    ...state,
+    correlationsMethod: action.method
+  }
+}
+
+const addCorrelationsElements = (state, action) => {
+  return {
+    ...state,
+    correlationsResults: state.correlationsResults === undefined 
+      ? [action.results]
+      : [...state.correlationsResults, action.results],
+    correlationsRankings: state.correlationsRankings === undefined
+      ? [action.rankings]
+      : [...state.correlationsRankings, action.rankings]
+  }
+}
+
+const removeCorrelationsElements = (state, action) => {
+  return {
+    ...state,
+    correlationsResults: [...state.correlationsResults.filter((r, ind) => ind !== action.index)],
+    correlationsRankings: [...state.correlationsRankings.filter((r, ind) => ind !== action.index)]
+  }
+}
+
+const getCorrelationsResultsStart = (state, action) => {
+  return {
+    ...state,
+    fetchingCorrelations: true,
+    correlationsError: undefined
+  }
+}
+
+const getCorrelationsResultsSuccess = (state, action) => {
+  return {
+    ...state,
+    correlations: action.correlations,
+    fetchingCorrelations: false,
+  }
+}
+
+const getCorrelationsResultsFail = (state, action) => {
+  return {
+    ...state,
+    fetchingCorrelations: false,
+    correlationsError: action.error
+  }
+}
+
 export default function calculations (state = initialState, action) {
   switch (action.type) {
     case actions.CALCULATION_SET_METHOD:
@@ -166,12 +226,27 @@ export default function calculations (state = initialState, action) {
       return checkForm(state, action)
     case actions.CALCULATION_RESET_FORM:
       return resetForm(state, action)
+
     case actions.CALCULATION_RESULTS_START:
       return getResultsStart(state, action)
     case actions.CALCULATION_RESULTS_SUCCESS:
       return getResultsSuccess(state, action)
     case actions.CALCULATION_RESULTS_FAIL:
       return getResultsFail(state, action)
+    
+    case actions.CALCULATION_SET_CORRELATIONS_METHOD:
+      return setCorrelationsMethod(state, action)
+    case actions.CALCULATION_ADD_ELEMENTS:
+      return addCorrelationsElements(state, action)
+    case actions.CALCULATION_REMOVE_ELEMENTS:
+      return removeCorrelationsElements(state, action)
+
+    case actions.CALCULATION_CORRELATIONS_START:
+      return getCorrelationsResultsStart(state, action)
+    case actions.CALCULATION_CORRELATIONS_SUCCESS:
+      return getCorrelationsResultsSuccess(state, action)
+    case actions.CALCULATION_CORRELATIONS_FAIL:
+      return getCorrelationsResultsFail(state, action)
     default:
       return state
   }

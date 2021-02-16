@@ -8,6 +8,7 @@ import HomeIcon from '@material-ui/icons/Home'
 import FunctionsIcon from '@material-ui/icons/Functions'
 import SubjectIcon from '@material-ui/icons/Subject'
 import MailIcon from '@material-ui/icons/Mail'
+import HistoryIcon from '@material-ui/icons/History'
 
 const useStyles = makeStyles({
   root: {
@@ -51,6 +52,13 @@ const Menu = () => {
         >
           <FunctionsIcon className={classes.icon} />
           <Typography variant='h5'>Calculation</Typography>
+        </Link>
+        <Link
+          to='/history'
+          className={classes.item}
+        >
+          <HistoryIcon className={classes.icon} />
+          <Typography variant='h5'>History</Typography>
         </Link>
         <Link
           to='/methods'

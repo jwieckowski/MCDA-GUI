@@ -102,7 +102,6 @@ export function getResultsSuccess(results) {
   }
 }
 
-
 export function getResultsFail(error) {
   return {
     type: actions.CALCULATION_RESULTS_FAIL,
@@ -110,4 +109,52 @@ export function getResultsFail(error) {
   }
 }
 
+export function setCorrelationsMethod (method) {
+  return {
+    type: actions.CALCULATION_SET_CORRELATIONS_METHOD,
+    method
+  }
+}
 
+export function addCorrelationsResults (results, rankings) {
+  return {
+    type: actions.CALCULATION_ADD_ELEMENTS,
+    results,
+    rankings
+  }
+}
+
+export function removeCorrelationsResults (index) {
+  return {
+    type: actions.CALCULATION_REMOVE_ELEMENTS,
+    index
+  }
+}
+
+export function getCorrelationsResults (data) {
+  return {
+    type: actions.CALCULATION_CORRELATIONS,
+    data
+  }
+} 
+
+export function getCorrelationsResultsStart() {
+  return {
+    type: actions.CALCULATION_CORRELATIONS_START
+  }
+}
+
+export function getCorrelationsResultsSuccess(correlations) {
+  return {
+    type: actions.CALCULATION_CORRELATIONS_SUCCESS,
+    correlations
+  }
+}
+
+
+export function getCorrelationsResultsFail(error) {
+  return {
+    type: actions.CALCULATION_CORRELATIONS_FAIL,
+    error
+  }
+}

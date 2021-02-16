@@ -8,6 +8,8 @@ import Switch from '@material-ui/core/Switch'
 import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
 
+import { Link } from 'react-router-dom'
+
 const useStyles = makeStyles({
   root: {
     width: '100%',
@@ -37,6 +39,10 @@ const useStyles = makeStyles({
     overflow: 'auto',
     display: 'flex',
     alignItems: 'center'
+  },
+  item: {
+    textDecoration: 'none',
+    color: 'inherit'
   },
   buttons: {
     width: '100%',
@@ -98,18 +104,6 @@ const Results = ({ handleReset }) => {
       window.localStorage.setItem('results', JSON.stringify([data]))  
     }
     window.alert('Zapisano wyniki')
-  }
-
-  // console.log(window.localStorage.removeItem('results'))
-
-  const showHistory = () => {
-    if (window.localStorage['results']) {
-      JSON.parse(window.localStorage['results']).map(r => {
-        console.log(r)
-      })
-    } else {
-      console.log('no history recorded')
-    }
   }
 
   const getRows = () => {
@@ -181,9 +175,14 @@ const Results = ({ handleReset }) => {
       <Grid className={classes.content}>
         {content}
         <Grid className={classes.buttons}>
-          <Button onClick={showHistory} className={classes.button}>
-            <Typography>Historia</Typography>
-          </Button>
+          <Link
+            to='/history'
+            className={classes.item}
+          >
+            <Button className={classes.button}>
+              <Typography>Historia</Typography>
+            </Button>
+          </Link>
           <Grid>
             <Button onClick={handleSave} className={classes.button}>
               <Typography>Zapisz</Typography>
