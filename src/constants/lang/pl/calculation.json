@@ -1,0 +1,46 @@
+{
+    "step1": "Metoda MCDA",
+    "step2": "Normalizacja",
+    "step2-1": "Funkcja preferencji",
+    "step3": "Macierz decyzyjna",
+    "step4": "Wagi i typ kryteriów",
+
+    "message1": "Należy wybrać metodę\n",
+    "message2": "Należy wybrać normalizację lub funckję preferencji\n",
+    "message3": "Należy podać ilość alertnatyw\n",
+    "message4": "Należy podać ilość kryteriów\n",
+    "message5": "Należy wypełnić macierz decyzyjną\n",
+    "message6": "Suma wag w wektorze wag powinna wynosić 1\n",
+
+    "save-results": "Zapisano wyniki",
+    "vertical": "Pionowo",
+    "horizontal": "Poziomo",
+
+    "alternatives": "Alternatywy",
+    "preferences": "Preferencje",
+
+    "history": "Historia",
+    "save": "Zapisz",
+    "back": "Wstecz",
+    "next": "Dalej",
+    "finish": "Zakończ",
+
+    "criteria": "Kryteria",
+    "criteria-weights": "Wagi kryteriów",
+
+    "file": "plik",
+    "input": "input",
+
+    "types": "Typy",
+    "weights": "Wagi",
+
+    "weights-input": "Wprowadź wagi",
+    "method-select": "Wybierz metodę",
+    "no-criteria": "Zdefiniuj ilość kryteriów",
+    
+    "load-file": "Załaduj plik",
+    "data-input": "Wprowadź dane",
+
+    "file-load-error": "Błąd przy wczytywaniu pliku",
+    "normalization-method": "Metoda normalizacji"
+}

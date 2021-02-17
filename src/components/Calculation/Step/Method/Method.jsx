@@ -2,6 +2,7 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Grid } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
+import { useTranslation } from 'react-i18next'
 
 import Typography from '@material-ui/core/Typography'
 import TextField from '@material-ui/core/TextField'
@@ -27,6 +28,7 @@ const methods = ['TOPSIS', 'COMET', 'VIKOR', 'SPOTIS', 'COPRAS', 'PROMETHEE']
 const Method = () => {
   const classes = useStyles()
   const dispatch = useDispatch()
+  const { t } = useTranslation()
 
   const { method } = useSelector((state) => state.calculations)
 
@@ -39,7 +41,7 @@ const Method = () => {
     <Grid>
       <TextField
           select
-          label="MCDA method"
+          label={t('calculation:step1')}
           value={method === undefined ? '' : method}
           onChange={handleChange}
           variant="outlined"

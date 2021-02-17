@@ -6,7 +6,8 @@ import Menu from './../components/Menu'
 const useStyles = makeStyles(theme => ({
   root: {
     height: '100vh',
-    width: '100vw'
+    width: '100vw',
+    minWidth: '750px'
   }
 }))
 

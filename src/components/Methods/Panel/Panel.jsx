@@ -29,17 +29,6 @@ const useStyles = makeStyles({
 
 const Panel = ({ value, index, method, abbreviation, images }) => {
   const classes = useStyles()
-//   if (!loading) {
-//     if (!loadError) {
-//       content = (
-//         <Grid container maxwidth='xs' className={classes.root}>
-//           {switchContent(location.pathname, data)}
-//         </Grid>
-//       )
-//     } else {
-//       content = <Page404 />
-//     }
-//   }
 
   return (
     <Box

@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Grid } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
+import { useTranslation } from "react-i18next"
 
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Switch from '@material-ui/core/Switch'
@@ -79,6 +80,7 @@ const getRankings = (method, results, alternatives) => {
 
 const Results = ({ handleReset }) => {
   const classes = useStyles()
+  const { t } = useTranslation()
   const [option, setOption] = useState(false)
 
   const { method, alternatives, results, fetchingResults, resultsError } = useSelector((state) => state.calculations)
@@ -103,7 +105,7 @@ const Results = ({ handleReset }) => {
     } else {
       window.localStorage.setItem('results', JSON.stringify([data]))  
     }
-    window.alert('Zapisano wyniki')
+    window.alert(t('calculation:save-results'))
   }
 
   const getRows = () => {
@@ -115,9 +117,9 @@ const Results = ({ handleReset }) => {
         className={classes.row}
         style={option ? { flexDirection: 'row'} : { flexDirection: 'column'}}
         key={-1}>
-        <Grid className={classes.space}><Typography>Alternatives</Typography></Grid>
-        <Grid className={classes.space}><Typography>Preferences</Typography></Grid>
-        <Grid className={classes.space}><Typography>Ranking</Typography></Grid>
+        <Grid className={classes.space}><Typography>{t('calculation:alternatives')}</Typography></Grid>
+        <Grid className={classes.space}><Typography>{t('calculation:preferences')}</Typography></Grid>
+        <Grid className={classes.space}><Typography>{t('common:rankings')}</Typography></Grid>
       </Grid>
     )
 
@@ -137,13 +139,13 @@ const Results = ({ handleReset }) => {
     return content
   }
 
-  let content = <Typography variant='h3'>Loading...</Typography>
+  let content = <Typography variant='h3'>{t('common:loading')}</Typography>
   if (!fetchingResults) {
     if (!resultsError) {
       content = (
         <>
           <Grid className={classes.mainLabel}>
-            <Typography variant='h5'>Wyniki</Typography>
+            <Typography variant='h5'>{t('common:results')}</Typography>
             <FormControlLabel
               control={
                 <Switch
@@ -153,7 +155,7 @@ const Results = ({ handleReset }) => {
                   color="primary"
                 />
               }
-              label={option ? 'Poziomo' : 'Pionowo'}
+              label={option ? t('calculation:horizontal') : t('calculation:vertical')}
               style={{marginLeft: '5px'}}
             />
           </Grid>
@@ -166,7 +168,7 @@ const Results = ({ handleReset }) => {
         </>
       )
     } else {
-      content = <Typography variant='h3'>Error...</Typography>
+      content = <Typography variant='h3'>{t('common:error')}</Typography>
     }
   }
 
@@ -180,15 +182,18 @@ const Results = ({ handleReset }) => {
             className={classes.item}
           >
             <Button className={classes.button}>
-              <Typography>Historia</Typography>
+              <Typography>{t('calculation:history')}</Typography>
             </Button>
           </Link>
           <Grid>
-            <Button onClick={handleSave} className={classes.button}>
-              <Typography>Zapisz</Typography>
-            </Button>
+            {
+              results !== undefined && !results.includes('NaN') &&
+              <Button onClick={handleSave} className={classes.button}>
+                <Typography>{t('calculation:save')}</Typography>
+              </Button>
+            }
             <Button onClick={handleReset} className={classes.button}>
-              <Typography>Reset</Typography>
+              <Typography>{t('common:reset')}</Typography>
             </Button>
           </Grid>
         </Grid>

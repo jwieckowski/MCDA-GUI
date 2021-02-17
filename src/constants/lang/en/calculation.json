@@ -1,0 +1,47 @@
+{
+    "step1": "MCDA method",
+    "step2": "Normalization",
+    "step2-1": "Preference function",
+    "step3": "Decision matrix",
+    "step4": "Weights and criteria types",
+
+    "message1": "MCDA method should be selected\n",
+    "message2": "Normalization or preference function should be selected\n",
+    "message3": "Number of alternatives should be given\n",
+    "message4": "Number of criteria should be given\n",
+    "message5": "Decision matrix should be filled\n",
+    "message6": "Weights sum should equal 1\n",
+
+    "save-results": "Results saved",
+    "vertical": "Vertical",
+    "horizontal": "Horizontal",
+
+    "alternatives": "Alternatives",
+    "preferences": "Preferences",
+
+    "history": "History",
+    "save": "Save",
+    "back": "Back",
+    "next": "Next",
+    "finish": "Finish",
+
+    "preference": "Preference",
+    "criteria": "Criteria",
+    "criteria-weights": "Criteria weights",
+
+    "file": "file",
+    "input": "input",
+
+    "types": "Types",
+    "weights": "Weights",
+
+    "weights-input": "Input weights",
+    "method-select": "Select method",
+    "no-criteria": "Input criteria amount",
+    
+    "load-file": "Load file",
+    "data-input": "Input data",
+
+    "file-load-error": "Loading file error",
+    "normalization-method": "Normalization method"
+}

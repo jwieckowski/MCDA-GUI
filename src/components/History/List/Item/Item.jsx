@@ -2,6 +2,7 @@ import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Grid, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
+import { useTranslation } from "react-i18next"
 
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
@@ -38,28 +39,39 @@ const prepareList = (list, number, flag) => {
   return list.length > number ? [...preparedList, '...'] : preparedList
 }
 
-const checkIfAdded = (rankings, r2, index) => {
-  if (rankings === undefined) return false
-  return rankings.filter((r, ind) => JSON.stringify(r) === JSON.stringify(r2) && ind === index).length !== 0
+const checkIfAdded = (correlationsResults, correlationsRankings, labels, results, rankings, method) => {
+  if (correlationsResults === undefined) return false
+  const stringResults = correlationsResults.map(r => JSON.stringify(r))
+  const stringRankings = correlationsRankings.map(r => JSON.stringify(r))
+  const element = stringResults.filter((r, ind) => r === JSON.stringify(results) && stringRankings[ind] === JSON.stringify(rankings) && labels[ind] === method)[0]
+  return stringResults.indexOf(element) !== -1
 }
 
 const Item = ({ method, results, rankings, index, setStorage }) => {
   const classes = useStyles()
   const dispatch = useDispatch()
+  const { t } = useTranslation()
   const DISPLAYED_ELEMENTS = 6
 
-  const { correlationsRankings, correlationsResults } = useSelector(state => state.calculations)
+  const { correlationsRankings, correlationsResults, labels } = useSelector(state => state.calculations)
 
   const handleDelete = () => {
     const storage = JSON.parse(window.localStorage['results']).filter((r, ind) => ind !== index)
     window.localStorage.setItem('results', JSON.stringify(storage))
     setStorage(JSON.parse(window.localStorage['results']))
   }
+  const handleAdd = () => {
+    if (correlationsRankings !== undefined && JSON.stringify(correlationsRankings) !== JSON.stringify([]) && correlationsRankings[0].length !== rankings.length) {
+      window.alert(t('history:cant-compare'))
+      return
+    } 
+    dispatch(addCorrelationsResults(results, rankings, method))
+  }
 
   const handleClick = () => {
-    checkIfAdded(correlationsRankings, rankings, index)
-      ? dispatch(removeCorrelationsResults(index)) 
-      : dispatch(addCorrelationsResults(results, rankings))
+    checkIfAdded(correlationsResults, correlationsRankings, labels, results, rankings, method)
+      ? dispatch(removeCorrelationsResults(results, rankings, method)) 
+      : handleAdd()
   }
 
   return (
@@ -69,18 +81,18 @@ const Item = ({ method, results, rankings, index, setStorage }) => {
         secondary={
           <Grid className={classes.details}>
             <Grid className={classes.results}>
-                <Typography className={classes.label}>Results:</Typography>
-                {prepareList(results, DISPLAYED_ELEMENTS, true).map(r => {
+                <Typography className={classes.label}>{t('common:results')}:</Typography>
+                {prepareList(results, DISPLAYED_ELEMENTS, true).map((r, ind) => {
                   return (
-                    <Typography className={classes.label}>{r}</Typography>      
+                    <Typography key={ind} className={classes.label}>{r}</Typography>      
                 )
                 })}
               </Grid>
               <Grid className={classes.results}>
-                <Typography className={classes.label}>Rankings:</Typography>
-                {prepareList(rankings, DISPLAYED_ELEMENTS, false).map(r => {
+                <Typography className={classes.label}>{t('common:rankings')}:</Typography>
+                {prepareList(rankings, DISPLAYED_ELEMENTS, false).map((r, ind) => {
                   return (
-                    <Typography className={classes.label}>{r}</Typography>      
+                    <Typography key={ind} className={classes.label}>{r}</Typography>      
                 )
                 })}
             </Grid>
@@ -93,7 +105,7 @@ const Item = ({ method, results, rankings, index, setStorage }) => {
         </IconButton>
         <IconButton onClick={handleClick} edge="end" aria-label="comments">
           {
-            checkIfAdded(correlationsRankings, rankings, index)
+            checkIfAdded(correlationsResults, correlationsRankings, labels, results, rankings, method)
               ? <CheckCircleIcon/>
               : <CheckCircleOutlineIcon />
           }

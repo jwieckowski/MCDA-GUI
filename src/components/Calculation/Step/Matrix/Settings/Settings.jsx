@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Grid } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
+import { useTranslation } from 'react-i18next'
 
 import { ExcelRenderer } from 'react-excel-renderer'
 import Input from '@material-ui/core/Input'
@@ -25,6 +26,7 @@ const useStyles = makeStyles({
 const Settings = () => {
   const classes = useStyles()
   const dispatch = useDispatch()
+  const { t } = useTranslation()
   const [option, setOption] = useState(false)
 
   const { alternatives, criteria } = useSelector((state) => state.calculations)
@@ -40,7 +42,7 @@ const Settings = () => {
     ExcelRenderer(event.target.files[0], (err, resp) => {
       if (err) {
         console.log(err)
-        window.alert('Błąd przy wczytywaniu pliku')
+        window.alert(t('calculation:file-load-error'))
       } else {
         dispatch(setMatrixFile(event.target.files[0]))
         dispatch(setMatrix(resp.rows))
@@ -69,13 +71,13 @@ const Settings = () => {
             color="primary"
           />
         }
-        label={option ? 'Wprowadź dane' : 'Załaduj plik'}
+        label={option ? t('calculation:data-input') : t('calculation:load-file')}
       />
       {
         !option
         ? <>
           <TextField
-            label="Alternatives"
+            label={t('calculation:alternatives')}
             type="number"
             InputLabelProps={{
                 shrink: true
@@ -89,7 +91,7 @@ const Settings = () => {
             onChange={handleAlternatives}
           />
           <TextField
-            label="Criteria"
+            label={t('calculation:criteria')}
             type="number"
             InputLabelProps={{
                 shrink: true

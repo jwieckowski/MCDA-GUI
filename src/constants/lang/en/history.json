@@ -1,0 +1,13 @@
+{
+    "no-data": "No data",
+    "rankings-select": "Select rankings to compare",
+    "method": "Method",
+    "correlation-method": "Correlation method",
+
+    "clear-history": "Clear history",
+    "compare": "Compare",
+
+    "message1": "Correlation coefficient should be selected \n",
+    "message2": "Rankings to compare should be selected \n",
+    "cant-compare": "Can not compare rankings with different size"
+}

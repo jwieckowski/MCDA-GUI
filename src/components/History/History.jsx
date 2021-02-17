@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Grid, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
+import { useTranslation } from "react-i18next"
 
 import CorrelationTable from './CorrelationTable'
 import List from './List'
@@ -25,6 +26,7 @@ const useStyles = makeStyles({
 
 const History = () => {
   const classes = useStyles()
+  const { t } = useTranslation()
   const [storage, setStorage] = useState([])
 
   const checkHistoryResults = () => {
@@ -46,7 +48,7 @@ const History = () => {
                 setStorage={setStorage}
               />
             </Grid>
-          : <Typography variant='h4'>Brak danych</Typography>
+          : <Typography variant='h4'>{t('history:no-data')}</Typography>
       }
     </Grid>
   )

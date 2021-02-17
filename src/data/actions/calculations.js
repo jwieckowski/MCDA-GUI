@@ -116,18 +116,27 @@ export function setCorrelationsMethod (method) {
   }
 }
 
-export function addCorrelationsResults (results, rankings) {
+export function addCorrelationsResults (results, rankings, label) {
   return {
     type: actions.CALCULATION_ADD_ELEMENTS,
     results,
-    rankings
+    rankings,
+    label
   }
 }
 
-export function removeCorrelationsResults (index) {
+export function removeCorrelationsResults (results, rankings, label) {
   return {
     type: actions.CALCULATION_REMOVE_ELEMENTS,
-    index
+    results,
+    rankings,
+    label
+  }
+}
+
+export function resetCorrelations () {
+  return {
+    type: actions.CALCULATION_RESET_CORRELATIONS
   }
 }
 

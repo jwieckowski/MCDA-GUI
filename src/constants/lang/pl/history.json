@@ -1,0 +1,16 @@
+{
+    "no-data": "Brak danych",
+    "results": "Wyniki",
+    "rankings": "Ranking",
+    "rankings-select": "Wybierz rankingi do porównania",
+    "method": "Metoda",
+    "correlation-method": "Metoda korelacji",
+
+    "clear-history": "Wyczyść historię",
+    "reset": "Reset",
+    "compare": "Porównaj",
+
+    "message1": "Należy wybrać współczynnik korelacji \n",
+    "message2": "Należy wybrać rankingi do porównania \n",
+    "cant-compare": "Nie można porównać wyników o różnych rozmiarach"
+}

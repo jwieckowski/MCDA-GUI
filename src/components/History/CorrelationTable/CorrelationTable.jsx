@@ -2,6 +2,7 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { Grid, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
+import { useTranslation } from "react-i18next"
 
 const useStyles = makeStyles({
   root: {
@@ -44,15 +45,14 @@ const useStyles = makeStyles({
 
 const CorrelationTable = () => {
   const classes = useStyles()
+  const { t } = useTranslation()
 
-  const { correlationsMethod, correlations, fetchingCorrelations, correlationsError } = useSelector(state => state.calculations)
-
-  const getMethods = () => JSON.parse(window.localStorage['results']).map(r => r.method)
+  const { correlationsMethod, correlations, labels, fetchingCorrelations, correlationsError } = useSelector(state => state.calculations)
 
   const getColumns = (row) => {
-    return row.map(r => {
+    return row.map((r, ind) => {
       return (
-        <Typography className={classes.numbers}>{r}</Typography>
+        <Typography key={ind} className={classes.numbers}>{parseFloat(r).toFixed(6)}</Typography>
       )
     })
   }
@@ -61,14 +61,14 @@ const CorrelationTable = () => {
     return results.map((row, ind) => {
       return (
         <Grid className={classes.row} key={ind}>
-          <Typography className={classes.text}>{getMethods()[ind]}</Typography>
+          <Typography className={classes.text}>{labels[ind]}</Typography>
           {getColumns(row)}
         </Grid>
       )
     })
   }
 
-  let content = <Typography variant='h3'>Loading...</Typography>
+  let content = <Typography variant='h3'>{t('common:loading')}</Typography>
   if (!fetchingCorrelations) {
     if (!correlationsError) {
       content = (
@@ -77,8 +77,8 @@ const CorrelationTable = () => {
             <Typography variant='h5'>
               {
                 correlations !== undefined
-                  ? `Wyniki`
-                  : 'Wybierz rankingi do porównania'
+                  ? t('common:results')
+                  : t('history:rankings-select')
               }
             </Typography>
             <Typography variant='h6'>
@@ -89,10 +89,10 @@ const CorrelationTable = () => {
             correlations !== undefined &&
             <Grid className={classes.results}>
               <Grid className={classes.row}>
-                <Typography className={classes.text}>Methods</Typography>
-                {getMethods().map(method => {
+                <Typography className={classes.text}>{t('history:method')}</Typography>
+                {labels.map((method, ind) => {
                   return (
-                    <Typography className={classes.numbers}>{method}</Typography>
+                    <Typography key={ind} className={classes.numbers}>{method}</Typography>
                   )
                 })}
               </Grid>
@@ -102,7 +102,7 @@ const CorrelationTable = () => {
         </Grid>
       )
     } else {
-      content = <Typography variant='h3'>Error...</Typography>
+      content = <Typography variant='h3'>{t('common:error')}</Typography>
     }
   }
 

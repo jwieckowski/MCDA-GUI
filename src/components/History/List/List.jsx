@@ -1,7 +1,9 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Grid, Typography, Button } from '@material-ui/core'
+import { Typography, Button } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
+import { useTranslation } from "react-i18next"
+
 import TextField from '@material-ui/core/TextField'
 import MenuItem from '@material-ui/core/MenuItem'
 import List from '@material-ui/core/List'
@@ -9,7 +11,7 @@ import ListItem from '@material-ui/core/ListItem'
 
 import Item from './Item'
 
-import { setCorrelationsMethod, getCorrelationsResults } from './../../../data/actions/calculations.js'
+import { setCorrelationsMethod, getCorrelationsResults, resetCorrelations } from './../../../data/actions/calculations.js'
 
 
 const useStyles = makeStyles({
@@ -42,16 +44,17 @@ const correlationMethods = ['spearman', 'pearson', 'weighted spearman', 'rank si
 const MyList = ({ storage, setStorage }) => {
   const classes = useStyles()
   const dispatch = useDispatch()
+  const { t } = useTranslation()
 
   const { correlationsMethod, correlationsRankings, correlationsResults } = useSelector(state => state.calculations)
   
   const checkCorrectness = () => {
     let message = ''
     message += correlationsMethod === undefined
-      ? 'Należy wybrać współczynnik korelacji \n'
+      ? t('history:message1')
       : ''
     message += correlationsRankings === undefined
-      ? 'Należy wybrać rankingi do porównania'
+      ? t('history:message2')
       : ''
     
     message !== '' && window.alert(message)
@@ -65,6 +68,10 @@ const MyList = ({ storage, setStorage }) => {
   const handleClear = () => {
     window.localStorage.removeItem('results')
     setStorage([])
+  }
+
+  const handleReset = () => {
+    dispatch(resetCorrelations())
   }
 
   const handleCompare = () => {
@@ -81,6 +88,7 @@ const MyList = ({ storage, setStorage }) => {
       {storage.map((s, index) => {
         return (
           <Item
+            key={index}
             method={s.method}
             results={s.results}
             rankings={s.rankings}
@@ -91,11 +99,11 @@ const MyList = ({ storage, setStorage }) => {
       })}
       <ListItem className={classes.buttons}>
         <Button onClick={handleClear} className={classes.button}>
-          <Typography>Clear history</Typography>
+          <Typography>{t('history:clear-history')}</Typography>
         </Button>
         <TextField
           select
-          label="Correlation method"
+          label={t('history:correlation-method')}
           value={correlationsMethod === undefined ? '' : correlationsMethod}
           onChange={handleChange}
           variant="outlined"
@@ -109,8 +117,11 @@ const MyList = ({ storage, setStorage }) => {
         </TextField>
       </ListItem>
       <ListItem className={classes.compare}>
+        <Button onClick={handleReset} className={classes.button}>
+          <Typography>{t('common:reset')}</Typography>
+        </Button>
         <Button onClick={handleCompare} className={classes.button}>
-          <Typography>Compare</Typography>
+          <Typography>{t('history:compare')}</Typography>
         </Button>
       </ListItem>
     </List>

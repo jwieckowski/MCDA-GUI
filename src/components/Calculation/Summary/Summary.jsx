@@ -2,6 +2,7 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { Grid } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
+import { useTranslation } from "react-i18next"
 
 import Typography from '@material-ui/core/Typography'
 
@@ -27,14 +28,15 @@ const useStyles = makeStyles({
 
 const Summary = () => {
   const classes = useStyles()
+  const { t } = useTranslation() 
   const info = useSelector((state) => state.calculations)
 
   const getInfo = () => {
     return (
       <Typography variant='h5'>
         { info.method !== 'PROMETHEE'
-          ? <>Normalization: {info.normalization === undefined ? '' : info.normalization}</>
-          : <>Preference: {info.preferenceFunction === undefined ? '' : info.preferenceFunction}</>
+          ? <>{t('calculation:step2')}: {info.normalization === undefined ? '' : info.normalization}</>
+          : <>{t('calculation:preference')}: {info.preferenceFunction === undefined ? '' : info.preferenceFunction}</>
         }
       </Typography>
     )  
@@ -43,14 +45,14 @@ const Summary = () => {
   return (
     <Grid className={classes.root}>
       <Grid className={classes.info}>
-        <Typography variant='h5'>MCDA method: {info.method === undefined ? '' : info.method}</Typography>
+        <Typography variant='h5'>{t('calculation:step1')}: {info.method === undefined ? '' : info.method}</Typography>
         {getInfo()}
-        <Typography variant='h5'>Decision matrix: {info.matrixFile === undefined ? 'input' : 'file'}</Typography>
+        <Typography variant='h5'>{t('calculation:step3')}: {info.matrixFile === undefined ? t('calculation:input') : t('calculation:file')}</Typography>
       </Grid>
       <Grid className={classes.info}>
-        <Typography variant='h5'>Alternatives: {info.alternatives === undefined ? '' : info.alternatives}</Typography>
-        <Typography variant='h5'>Criteria: {info.criteria === undefined ? '' : info.criteria}</Typography>
-        <Typography variant='h5'>Criteria weights: {info.weightsMethod === undefined ? 'input' : info.weightsMethod}</Typography>
+        <Typography variant='h5'>{t('calculation:alternatives')}: {info.alternatives === undefined ? '' : info.alternatives}</Typography>
+        <Typography variant='h5'>{t('calculation:criteria')}: {info.criteria === undefined ? '' : info.criteria}</Typography>
+        <Typography variant='h5'>{t('calculation:criteria-weights')}: {info.weightsMethod === undefined ? t('calculation:input') : info.weightsMethod}</Typography>
       </Grid>
     </Grid>
   )

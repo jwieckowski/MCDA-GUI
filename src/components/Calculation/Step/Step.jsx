@@ -1,6 +1,7 @@
 import React from 'react'
 import { Grid } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
+import { useTranslation } from "react-i18next"
 
 import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
@@ -16,8 +17,7 @@ const useStyles = makeStyles({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    flexDirection: 'column',
-    // backgroundColor: 'red'
+    flexDirection: 'column'
   },
   button: {
     marginTop: '10%'
@@ -26,6 +26,7 @@ const useStyles = makeStyles({
 
 const Step = ({ handleBack, handleNext, activeStep, length }) => {
   const classes = useStyles()
+  const { t } = useTranslation()
 
   const content = {
     0: <Method />,
@@ -33,17 +34,6 @@ const Step = ({ handleBack, handleNext, activeStep, length }) => {
     2: <Matrix />,
     3: <Criteria />
   }
-  //   if (!loading) {
-//     if (!loadError) {
-//       content = (
-//         <Grid container maxwidth='xs' className={classes.root}>
-//           {switchContent(location.pathname, data)}
-//         </Grid>
-//       )
-//     } else {
-//       content = <Page404 />
-//     }
-//   }
 
   return (
     <Grid className={classes.root}>
@@ -55,7 +45,7 @@ const Step = ({ handleBack, handleNext, activeStep, length }) => {
             onClick={handleBack}
             className={classes.button}
           >
-            <Typography>Back</Typography>
+            <Typography>{t('calculation:back')}</Typography>
           </Button>
           <Button
             variant="contained"
@@ -63,7 +53,7 @@ const Step = ({ handleBack, handleNext, activeStep, length }) => {
             onClick={handleNext}
             className={classes.button}
           >
-            <Typography>{activeStep === length - 1 ? 'Finish' : 'Next'}</Typography>
+            <Typography>{activeStep === length - 1 ? t('calculation:finish') : t('calculation:next')}</Typography>
           </Button>
         </div>
       </div>

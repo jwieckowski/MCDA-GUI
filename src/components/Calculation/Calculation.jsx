@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Grid } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
+import { useTranslation } from "react-i18next"
 
 import Stepper from '@material-ui/core/Stepper'
 import Step from '@material-ui/core/Step'
@@ -32,11 +33,12 @@ const useStyles = makeStyles({
   }
 })
 
-const initialSteps = ['Metoda MCDA', 'Normalizacja', 'Macierz decyzyjna', 'Wagi i typ kryteriów']
-
 const Calculation = () => {
   const classes = useStyles()
   const dispatch = useDispatch()
+  const { t } = useTranslation()
+
+  const initialSteps = [t('calculation:step1'), t('calculation:step2'), t('calculation:step3'), t('calculation:step4')]
 
   const { method, normalization, alternatives, criteria, matrix, matrixFile, weightsValue, weightsType, weightsMethod, preferenceFunction, formFilled } = useSelector((state) => state.calculations)
 
@@ -44,19 +46,19 @@ const Calculation = () => {
   const [activeStep, setActiveStep] = React.useState(0)
 
   const showFormInfo = () => {
-    let message = method === undefined ? 'Należy wybrać metodę\n' : ''
-    message += (normalization === undefined  && preferenceFunction === undefined) ? 'Należy wybrać normalizację lub funckję preferencji\n': ''
-    message += alternatives === undefined ? 'Należy podać ilość alertnatyw\n': ''
-    message += criteria === undefined ? 'Należy podać ilość kryteriów\n': ''
+    let message = method === undefined ? t('calculation:message1') : ''
+    message += (normalization === undefined  && preferenceFunction === undefined) ? t('calculation:message2') : ''
+    message += alternatives === undefined ? t('calculation:message3') : ''
+    message += criteria === undefined ? t('calculation:message4') : ''
     if (matrix !== undefined) {
       message += (matrix.reduce((total, array) => {
         return total + array.reduce((sum, current) => sum + current)
-      })[0] === 0) ? 'Należy wypełnić macierz decyzyjną\n': ''
+      })[0] === 0) ? t('calculation:message5'): ''
     }
     if (weightsMethod === undefined) {
       if (weightsValue !== undefined) { 
         message += (weightsValue.reduce((total, current) => total + current) !== 1)
-          ? 'Suma wag w wektorze wag powinna wynosić 1\n' : ''
+          ? t('calculation:message6') : ''
       }
     }
     message !== '' && window.alert(message)
@@ -106,7 +108,7 @@ const Calculation = () => {
     method === 'PROMETHEE'
       ? setSteps(steps.map((step, index) => {
         return index === 1
-          ? 'Funkcja preferencji'
+          ? t('calculation:step2-1')
           : step
       }))
       : setSteps(initialSteps)

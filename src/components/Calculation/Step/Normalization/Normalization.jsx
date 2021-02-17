@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Grid } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
+import { useTranslation } from 'react-i18next'
 
 import Typography from '@material-ui/core/Typography'
 import TextField from '@material-ui/core/TextField'
@@ -28,6 +29,7 @@ const preferenceFunctions = ['usual', 'vshape', 'ushape', 'level', 'vshape_2']
 const Normalization = () => {
   const classes = useStyles()
   const dispatch = useDispatch()
+  const { t } = useTranslation()
   const [methods, setMethods] = useState([])
 
   const { method, normalization, preferenceFunction } = useSelector((state) => state.calculations)
@@ -62,7 +64,7 @@ const Normalization = () => {
     <Grid>
       <TextField
           select
-          label={method !== 'PROMETHEE' ? 'Normalization method' : 'Preference function'}
+          label={method !== 'PROMETHEE' ? t('calculation:normalization-method') : t('calculation:step2-1')}
           value={getValue()}
           onChange={handleChange}
           variant="outlined"

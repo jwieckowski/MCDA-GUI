@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Grid } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
+import { useTranslation } from "react-i18next"
 
 import TextField from '@material-ui/core/TextField'
 import MenuItem from '@material-ui/core/MenuItem'
@@ -29,7 +30,7 @@ const useStyles = makeStyles({
     width: '180px;'
   },
   label: {
-    width: '50px',
+    width: '70px',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center'
@@ -50,6 +51,7 @@ const isSumCorrect = (weights, index, newValue) => {
 const Criteria = () => {
   const classes = useStyles()
   const dispatch = useDispatch()
+  const { t } = useTranslation()
   const [option, setOption] = useState(false)
 
   const { weightsType, weightsValue, weightsMethod, criteria } = useSelector((state) => state.calculations)
@@ -139,7 +141,7 @@ const Criteria = () => {
               color="primary"
             />
           }
-          label={option ? 'Wprowadź wagi' : 'Wybierz metodę'}
+          label={option ? t('calculation:weights-input') : t('calculation:method-select')}
         />
       </Grid>
       {
@@ -147,13 +149,13 @@ const Criteria = () => {
         <>
           <Grid className={classes.row}>
             <Grid className={classes.label}>
-              <Typography>Typy</Typography>
+              <Typography>{t('calculation:types')}</Typography>
             </Grid>
             {getTypesColumns().map(column => column)}
           </Grid>
           <Grid className={classes.row}>
             <Grid className={classes.label}>
-              <Typography>Wagi</Typography>
+              <Typography>{t('calculation:weights')}</Typography>
             </Grid>
             {!option
               ?  getWeightsColumns().map(column => column)
@@ -175,7 +177,7 @@ const Criteria = () => {
       </>
       :
       <Grid className={classes.row}>
-        <Typography>Zdefiniuj ilość kryteriów</Typography>
+        <Typography>{t('calculation:no-criteria')}</Typography>
       </Grid>
       }
     </Grid>
