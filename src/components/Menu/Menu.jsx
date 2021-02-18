@@ -1,7 +1,7 @@
 import React from 'react'
 import { Grid, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 
 import Breadcrumbs from '@material-ui/core/Breadcrumbs'
@@ -39,6 +39,11 @@ const useStyles = makeStyles({
 const Menu = () => {
   const classes = useStyles()
   const { t } = useTranslation()
+  const location = useLocation()
+
+  const checkIfActive = (path) => {
+    return location.pathname === path    
+  }
 
   return (
     <Grid className={classes.root}>
@@ -46,6 +51,7 @@ const Menu = () => {
         <Link 
           to='/'
           className={classes.item}
+          style={{color: checkIfActive('/') ? 'black': 'inherit'}}
         >
           <HomeIcon className={classes.icon} />
           <Typography variant='h5'>{t('menu:home')}</Typography>
@@ -53,6 +59,7 @@ const Menu = () => {
         <Link
           to='/calculation'
           className={classes.item}
+          style={{color: checkIfActive('/calculation') ? 'black': 'inherit'}}
         >
           <FunctionsIcon className={classes.icon} />
           <Typography variant='h5'>{t('menu:calculation')}</Typography>
@@ -60,6 +67,7 @@ const Menu = () => {
         <Link
           to='/history'
           className={classes.item}
+          style={{color: checkIfActive('/history') ? 'black': 'inherit'}}
         >
           <HistoryIcon className={classes.icon} />
           <Typography variant='h5'>{t('menu:history')}</Typography>
@@ -67,6 +75,7 @@ const Menu = () => {
         <Link
           to='/methods'
           className={classes.item}
+          style={{color: checkIfActive('/methods') ? 'black': 'inherit'}}
         >
           <SubjectIcon className={classes.icon} />
           <Typography variant='h5'>{t('menu:methods')}</Typography>
@@ -74,6 +83,7 @@ const Menu = () => {
         <Link
           to='/contact'
           className={classes.item}
+          style={{color: checkIfActive('/contact') ? 'black': 'inherit'}}
         >
           <MailIcon className={classes.icon} />
           <Typography variant='h5'>{t('menu:contact')}</Typography>

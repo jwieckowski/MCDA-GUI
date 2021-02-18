@@ -1,0 +1,4 @@
+{
+    "mcda": "Wielokryterialne metody podejmowania decyzji (MCDA) są wykorzystywane w procesie podejmowania decyzji i mają na celu wspomóc wybór optymalnej alternatywy. Używają do tego kryteriów, które pomagają w ocenie zebranych alternatyw. Każda z metod należąca do tej grupy bazuje na innych założeniach, przez co wyniki uzyskiwane za ich pomocą mogą się różnić.",
+    "gui": "W celu ułatwienia posługiwania się metodami wielokryterialnymi stworzony został graficzny interfejs umożliwający rozwiązanie problemu przy pomocy wybranych metod. Uzyskane preferencje i rankingi dla zbioru alternatyw mogą również zostać porównane między sobą przy pomocy wybranych współczynników podobieństwa."
+}

@@ -1,0 +1,4 @@
+{
+    "mcda": "Multi-Criteria Decision Analysis (MCDA) methods are used in the decision-making process and are designed to support the selection of the optimal alternative. They use criteria that help to evaluate the set of alternatives. Each of the methods belonging to this group is based on different assumptions, so that the results obtained using them may differ.",
+    "gui": "To facilitate the use of multi-criteria methods, a graphical interface has been created that allows solving the problem with the selected methods. The obtained preferences and rankings for a set of alternatives can also be compared with each other using selected similarity coefficients."
+}

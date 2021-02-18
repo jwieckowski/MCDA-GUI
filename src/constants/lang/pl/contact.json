@@ -1,0 +1,10 @@
+{
+    "department" : "Katedra Sztucznej Inteligencji i Matematyki Stosowanej",
+    "faculty": "Wydział Informatyki i Technologii Informacyjnych",
+    "university": "Zachodniopomorski Uniwersytet Technologiczny, Szczecin",
+    "address": "ul. Żołnierska 49, 71-210 Szczecin, Poland",
+    "mail": "jakub-wieckowski@zut.edu.pl",
+    "comet": "comet.edu.pl",
+    "about": "Strona powstała w celu ułatwienia korzystania z metod MCDA. Strona Back-End'owa obsługiwana jest za pomocą modułu Python-Flask oraz biblioteki PYMCDM. Front-End powstał przy użyciu Node.js z wykorzystaniem frameworka React.",
+    "info": "W przypadku znalezienia błędów pojawiąjących się na stronie, proszę o kontakt pod wskazany adres e-mail."
+}

@@ -1,0 +1,10 @@
+{
+    "department" : "Department of Artificial Intelligence method and Applied Mathematics",
+    "faculty": "Faculty of Computer Science and Information Technology",
+    "university": "West Pomeranian University of Technology, Szczecin",
+    "address": "ul. Żołnierska 49, 71-210 Szczecin, Poland",
+    "mail": "jakub-wieckowski@zut.edu.pl",
+    "comet": "comet.edu.pl",
+    "about": "Page was created to facilitate the use of MCDA methods. The Back-End side is handled using the Python-Flask module and the PYMCDM library. The Front-End was created using Node.js with the React framework.",
+    "info": "In case of reporting any bugs please feel free to contact with given email."
+}
