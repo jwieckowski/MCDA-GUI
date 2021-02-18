@@ -1,106 +1,15 @@
 from flask import Flask
 from flask import request, jsonify
 from flask_cors import CORS
-import json
-import pymcdm
-import numpy as np
+
+from definitions import all_info
+from helpers import calculate_correlations, calculate_preferences
 
 app = Flask(__name__)
 app.config.from_object(__name__)
 
 # enable CORS
 CORS(app, resources={r'/*': {'origins': '*'}})
-
-mcda_methods = {
-    'topsis': pymcdm.methods.TOPSIS,
-    'vikor': pymcdm.methods.VIKOR,
-    'promethee': pymcdm.methods.PROMEHTEE_II,
-    'copras': pymcdm.methods.COPRAS,
-    'spotis': pymcdm.methods.SPOTIS,
-    'comet': pymcdm.methods.COMET
-}
-
-normalization_methods = {
-    'minmax': pymcdm.normalizations.minmax_normalization,
-    'max': pymcdm.normalizations.max_normalization,
-    'sum': pymcdm.normalizations.sum_normalization,
-    'vector': pymcdm.normalizations.vector_normalization,
-    'logarithmic': pymcdm.normalizations.logaritmic_normalization,
-}
-
-correlation_methods = {
-    'spearman': pymcdm.correlations.spearman,
-    'pearson': pymcdm.correlations.pearson,
-    'weighted spearman': pymcdm.correlations.weighted_spearman,
-    'rank similarity coef': pymcdm.correlations.rank_similarity_coef,
-    'kendall tau': pymcdm.correlations.kendall_tau,
-    'goodman kruskal gamma': pymcdm.correlations.goodman_kruskal_gamma
-}
-
-weights_methods = {
-    'equal': pymcdm.weights.equal,
-    'entropy': pymcdm.weights.entropy,
-    'standard deviation': pymcdm.weights.standard_deviation
-}
-
-all_info = {
-    'methods': [k for k in mcda_methods.keys()],
-    'normalizations': [k for k in normalization_methods.keys()],
-    'correlations': [k for k in correlation_methods.keys()],
-    'weights': [k for k in weights_methods.keys()]
-}
-
-def calc_promethee(matrix, weights, types, pref_func):
-
-    p = np.random.rand(matrix.shape[1]) / 2
-    q = np.random.rand(matrix.shape[1]) / 2 + 0.5
-
-    method = mcda_methods['promethee'](preference_function=pref_func)
-    result = method(matrix, weights, types, p=p, q=q)
-    return result
-
-def calc_spotis(matrix, weights, types):
-
-    bounds = np.vstack((
-        np.min(matrix, axis=0),
-        np.max(matrix, axis=0)
-    )).T
-    method = mcda_methods['spotis']()
-    result = method(matrix, weights, types, bounds)
-    return result
-
-def calc_comet(matrix, weights, types):
-
-    cvalues = np.vstack((
-        np.min(matrix, axis=0),
-        np.mean(matrix, axis=0),
-        np.max(matrix, axis=0)
-    )).T
-    method = mcda_methods['comet'](cvalues,
-                           rate_function=pymcdm.methods.COMET.topsis_rate_function(weights, types))
-    result = method(matrix)
-    return result
-
-def calc_weights(matrix, method):
-    return np.ones(matrix.shape[1]) / matrix.shape[1] if method == 'equal' else weights_methods[method](matrix)
-
-def calculate_results(method, normalization, matrix, weights, types, pref_func=None):
-
-    if method == 'promethee':
-        return calc_promethee(matrix, weights, types, pref_func)
-    elif method == 'spotis':
-        return calc_spotis(matrix, weights, types)
-    elif method == 'comet':
-        return calc_comet(matrix, weights, types)
-    else:
-        m = None
-        if normalization == 'none':
-            m = mcda_methods[method]()
-        else:
-            m = mcda_methods[method](normalization_methods[normalization])
-        result = m(matrix, weights, types)
-        return result
-
 
 @app.route('/', methods=['GET'])
 def home():
@@ -128,13 +37,7 @@ def correlations():
     results = request.args.getlist('results[]')
     rankings = request.args.getlist('rankings[]')
 
-    res = np.array([r.strip('][').split(',') for r in results]).astype(np.float)
-    rank = np.array([r.strip('][').split(',') for r in rankings]).astype(np.float)
-    correlations = []
-    if method == 'pearson':
-        correlations = np.array([[correlation_methods[method](r1, r2) for r2 in res] for r1 in res])
-    else:
-        correlations = np.array([[correlation_methods[method](r1, r2) for r2 in rank] for r1 in rank])
+    correlations = calculate_correlations(method, results, rankings)
 
     print(method)
     print(correlations)
@@ -145,23 +48,13 @@ def correlations():
 def results():
     method = request.args.get('method')
     normalization = request.args.get('normalization')
-    alternatives = request.args.get('alternatives')
-    criteria = request.args.get('criteria')
     matrix = request.args.getlist('matrix[]')
     weightsType = request.args.getlist('weightsType[]')
     weightsValue = request.args.getlist('weightsValue[]')
     weightsMethod = request.args.get('weightsMethod')
     preferenceFunction = request.args.get('preferenceFunction')
 
-    m = np.array([m.strip('][').split(',') for m in matrix]).astype(np.float)
-    w = []
-    if weightsMethod == 'None':
-        w = np.array([float(w) for w in weightsValue])
-    else:
-        w = calc_weights(m, weightsMethod)
-    t = np.array([1 if t == 'Profit' else -1 for t in weightsType])
-
-    result = calculate_results(method, normalization, m, w, t, preferenceFunction)
+    result, m = calculate_preferences(method, normalization, matrix, weightsMethod, weightsValue, weightsType, preferenceFunction)
 
     print('''Method: {}\nMatrix:\n {}'''.format(method, m))
     print(result)
