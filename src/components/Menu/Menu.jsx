@@ -1,7 +1,7 @@
 import React from 'react'
-import { Grid, Typography } from '@material-ui/core'
+import { Grid } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-import { Link, useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 
 import Breadcrumbs from '@material-ui/core/Breadcrumbs'
@@ -10,7 +10,9 @@ import FunctionsIcon from '@material-ui/icons/Functions'
 import SubjectIcon from '@material-ui/icons/Subject'
 import MailIcon from '@material-ui/icons/Mail'
 import HistoryIcon from '@material-ui/icons/History'
+import HelpIcon from '@material-ui/icons/Help'
 
+import Tab from './Tab'
 import LanguageSelect from './LanguageSelect'
 
 const useStyles = makeStyles({
@@ -20,19 +22,6 @@ const useStyles = makeStyles({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center'
-  },
-  item: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    color: 'inherit',
-    textDecoration: 'none',
-    '&:hover': {
-      color: 'black'
-    }
-  },
-  icon: {
-    paddingRight: '5px'
   }
 })
 
@@ -41,53 +30,38 @@ const Menu = () => {
   const { t } = useTranslation()
   const location = useLocation()
 
+  const paths = ['/', '/calculation', '/history', '/methods', '/contact']
+  const labels = [t('menu:home'), t('menu:calculation'), t('menu:history'), t('menu:methods'), t('menu:contact')]
+
   const checkIfActive = (path) => {
     return location.pathname === path    
+  }
+
+  const getIcon = (path) => {
+    const icons = {
+      '/': <HomeIcon className={classes.icon} />,
+      '/calculation': <FunctionsIcon className={classes.icon} />,
+      '/history': <HistoryIcon className={classes.icon} />,
+      '/methods': <SubjectIcon className={classes.icon} />,
+      '/contact': <MailIcon className={classes.icon} />,
+    }
+    return icons[path] || <HelpIcon className={classes.icon} />
   }
 
   return (
     <Grid className={classes.root}>
       <Breadcrumbs aria-label='breadcrumb'>
-        <Link 
-          to='/'
-          className={classes.item}
-          style={{color: checkIfActive('/') ? 'black': 'inherit'}}
-        >
-          <HomeIcon className={classes.icon} />
-          <Typography variant='h5'>{t('menu:home')}</Typography>
-        </Link>
-        <Link
-          to='/calculation'
-          className={classes.item}
-          style={{color: checkIfActive('/calculation') ? 'black': 'inherit'}}
-        >
-          <FunctionsIcon className={classes.icon} />
-          <Typography variant='h5'>{t('menu:calculation')}</Typography>
-        </Link>
-        <Link
-          to='/history'
-          className={classes.item}
-          style={{color: checkIfActive('/history') ? 'black': 'inherit'}}
-        >
-          <HistoryIcon className={classes.icon} />
-          <Typography variant='h5'>{t('menu:history')}</Typography>
-        </Link>
-        <Link
-          to='/methods'
-          className={classes.item}
-          style={{color: checkIfActive('/methods') ? 'black': 'inherit'}}
-        >
-          <SubjectIcon className={classes.icon} />
-          <Typography variant='h5'>{t('menu:methods')}</Typography>
-        </Link>
-        <Link
-          to='/contact'
-          className={classes.item}
-          style={{color: checkIfActive('/contact') ? 'black': 'inherit'}}
-        >
-          <MailIcon className={classes.icon} />
-          <Typography variant='h5'>{t('menu:contact')}</Typography>
-        </Link>
+        {paths.map((path, index) => {
+          return (
+            <Tab
+              key={index}
+              path={path}
+              icon={getIcon(path)}
+              label={labels[index]}
+              active={checkIfActive(path)}
+            />
+          )
+        })}
       </Breadcrumbs>
       <LanguageSelect className={classes.select} />
     </Grid>

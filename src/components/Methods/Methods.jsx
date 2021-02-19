@@ -25,17 +25,6 @@ const Methods = () => {
   const handleChange = (e, value) => {
     setActive(value)
   }
-//   if (!loading) {
-//     if (!loadError) {
-//       content = (
-//         <Grid container maxwidth='xs' className={classes.root}>
-//           {switchContent(location.pathname, data)}
-//         </Grid>
-//       )
-//     } else {
-//       content = <Page404 />
-//     }
-//   }
 
   return (
     <Grid className={classes.root}>

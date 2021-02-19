@@ -105,3 +105,4 @@ dist
 
 # Python 
 .idea/
+server/__pycache__

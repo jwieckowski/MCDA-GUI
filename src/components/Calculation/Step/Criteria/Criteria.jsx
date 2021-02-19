@@ -4,13 +4,14 @@ import { Grid } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { useTranslation } from "react-i18next"
 
-import TextField from '@material-ui/core/TextField'
-import MenuItem from '@material-ui/core/MenuItem'
 import Typography from '@material-ui/core/Typography'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Switch from '@material-ui/core/Switch'
 
 import { setWeightsType, setWeightsValue, setWeightsMethod } from './../../../../data/actions/calculations.js'
+
+import Types from './Types'
+import Weights from './Weights'
 
 const useStyles = makeStyles({
   root: {
@@ -22,31 +23,8 @@ const useStyles = makeStyles({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center'
-  },
-  column: {
-    width: '90px'
-  },
-  select: {
-    width: '180px;'
-  },
-  label: {
-    width: '70px',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center'
   }
 })
-
-const types = ['Profit', 'Cost']
-const methods = ['Equal', 'Entropy', 'Standard deviation']
-
-const isSumCorrect = (weights, index, newValue) => {
-  const sum = weights.reduce((total, current) => total + current)
-  let diff = newValue - weights[index]
-  if ((sum + diff) > 1) {
-    return false
-  } else return true 
-}
 
 const Criteria = () => {
   const classes = useStyles()
@@ -54,24 +32,11 @@ const Criteria = () => {
   const { t } = useTranslation()
   const [option, setOption] = useState(false)
 
-  const { weightsType, weightsValue, weightsMethod, criteria } = useSelector((state) => state.calculations)
-
-  const handleChange = (event, index) => {
-    dispatch(setWeightsType(weightsType.map((val, ind) => ind === index ? event.target.value : val)))
-  }
-
-  const handleInput = (event, index) => {
-    if(!isSumCorrect(weightsValue, index, event.target.value)) return
-    dispatch(setWeightsValue(weightsValue.map((val, ind) => ind === index ? parseFloat(event.target.value) : val)))
-  }
+  const { weightsType, criteria } = useSelector((state) => state.calculations)
 
   const handleSwitch = (event) => {
     setOption(!option)
     dispatch(setWeightsMethod(undefined))
-  }
-
-  const handleSelect = (event) => {
-    dispatch(setWeightsMethod(event.target.value))
   }
 
   useEffect(() => {
@@ -80,54 +45,6 @@ const Criteria = () => {
     dispatch(setWeightsType(elements.map(m => 'Profit')))
     dispatch(setWeightsValue(elements.map(m => 0)))
   }, [criteria])
-
-  const getTypesColumns = () => {
-    const content = []
-    for (let i = 0; i < criteria; i++) {
-      content.push(
-        <TextField
-          key={i}
-          select
-          value={weightsType === undefined ? types[0] : weightsType[i]}
-          onChange={(e) => handleChange(e, i)}
-          variant="outlined"
-          className={classes.column}
-        >
-          {types.map((option) => (
-            <MenuItem key={option} value={option}>
-              <Typography>{option}</Typography>
-            </MenuItem>
-          ))}
-        </TextField>
-      )
-    }
-    return content
-  }
-
-  const getWeightsColumns = () => {
-    const content = []
-    for (let i = 0; i < criteria; i++) {
-      content.push(
-        <TextField
-            key={i}
-            type={"number"}
-            value={weightsValue === undefined ? 0 : weightsValue[i]}
-            InputLabelProps={{
-                shrink: true,
-            }}
-            inputProps={{
-              min: 0,
-              max: 1,
-              step: 0.01
-            }}
-            variant="outlined"
-            className={classes.column}
-            onChange={(e) => handleInput(e, i)}
-          />
-      )
-    }
-    return content
-  }
 
   return (
     <Grid className={classes.root}>
@@ -147,34 +64,9 @@ const Criteria = () => {
       {
         criteria ?
         <>
-          <Grid className={classes.row}>
-            <Grid className={classes.label}>
-              <Typography>{t('calculation:types')}</Typography>
-            </Grid>
-            {getTypesColumns().map(column => column)}
-          </Grid>
-          <Grid className={classes.row}>
-            <Grid className={classes.label}>
-              <Typography>{t('calculation:weights')}</Typography>
-            </Grid>
-            {!option
-              ?  getWeightsColumns().map(column => column)
-              : <TextField
-                  select
-                  value={weightsMethod === undefined ? '' : weightsMethod}
-                  onChange={handleSelect}
-                  variant="outlined"
-                  className={classes.select}
-                >
-                  {methods.map((option) => (
-                    <MenuItem key={option} value={option}>
-                      <Typography>{option}</Typography>
-                    </MenuItem>
-                  ))}
-                </TextField>
-            }
-        </Grid>
-      </>
+          <Types />
+          <Weights option={option} />
+        </>
       :
       <Grid className={classes.row}>
         <Typography>{t('calculation:no-criteria')}</Typography>
