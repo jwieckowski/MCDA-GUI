@@ -26,8 +26,8 @@ const BottomPanel = ({ handleReset }) => {
   const classes = useStyles()
   const { t } = useTranslation()
 
-  const { method, alternatives, results } = useSelector((state) => state.calculations)
-
+  const { method, alternatives } = useSelector((state) => state.calculations)
+  const { results } = useSelector((state) => state.results)
 
   const handleSave = () => {
     const data = {

@@ -1,24 +1,11 @@
 import { 
-  getResultsStart,
-  getResultsSuccess,
-  getResultsFail,
   getCorrelationsResultsStart,
   getCorrelationsResultsSuccess,
   getCorrelationsResultsFail 
-} from './../../actions/calculations.js'
+} from '../../actions/correlations.js'
 import { put, call } from 'redux-saga/effects'
 
-import { getResults, getCorrelationsResults } from './../../api/calculationsAPI.js'
-
-export function * getResultsSaga ({ data }) {
-  yield put(getResultsStart())
-  try {
-    const results = yield call(getResults, data)
-    yield put(getResultsSuccess(results))
-  } catch (error) {
-    yield put(getResultsFail(error))
-  }
-}
+import { getCorrelationsResults } from './../../api/correlationsAPI.js'
 
 export function * getCorrelationsResultsSaga ({ data }) {
   yield put(getCorrelationsResultsStart())

@@ -47,7 +47,7 @@ const CorrelationTable = () => {
   const classes = useStyles()
   const { t } = useTranslation()
 
-  const { correlationsMethod, correlations, labels, fetchingCorrelations, correlationsError } = useSelector(state => state.calculations)
+  const { correlationsMethod, correlations, labels, fetchingCorrelations, correlationsError } = useSelector(state => state.correlations)
 
   const getColumns = (row) => {
     return row.map((r, ind) => {

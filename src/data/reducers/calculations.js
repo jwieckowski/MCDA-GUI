@@ -1,98 +1,85 @@
 import actions from '../../constants'
 
 const initialState = {
-    method: undefined,
-    normalization: undefined,
-    weightsType: undefined,
-    weightsValue: undefined,
-    weightsMethod: undefined,
-    alternatives: undefined,
-    criteria: undefined,
-    matrix: undefined,
-    matrixFile: undefined,
-    preferenceFunction: undefined,
-    formFilled: false,
-
-    results: undefined,
-    fetchingResults: false,
-    resultsError: undefined,
-    
-    correlationsMethod: undefined,
-    correlationsResults: undefined,
-    correlationsRankings: undefined,
-
-    correlations: undefined,
-    labels: undefined,
-    fetchingCorrelations: false,
-    correlationsError: undefined
+  method: undefined,
+  normalization: undefined,
+  weightsType: undefined,
+  weightsValue: undefined,
+  weightsMethod: undefined,
+  alternatives: undefined,
+  criteria: undefined,
+  matrix: undefined,
+  matrixFile: undefined,
+  preferenceFunction: undefined,
+  formFilled: false
 }
 
 const setMethod = (state, action) => {
-    return {
-        ...state,
-        method: action.method
-    }
+  return {
+      ...state,
+      method: action.method
+  }
 }
 
 const setNormalization = (state, action) => {
-    return {
-        ...state,
-        normalization: action.normalization
-    }
+  return {
+      ...state,
+      normalization: action.normalization
+  }
 }
 
 
 const setWeightsType = (state, action) => {
-    return {
-        ...state,
-        weightsType: action.weightsType
-    }
+  return {
+      ...state,
+      weightsType: action.weightsType
+  }
 }
 
 
 const setWeightsValue = (state, action) => {
-    return {
-        ...state,
-        weightsValue: action.weightsValue
-    }
+  return {
+      ...state,
+      weightsValue: action.weightsValue
+  }
 }
 
 
 const setWeightsMethod = (state, action) => {
-    return {
-        ...state,
-        weightsMethod: action.weightsMethod
-    }
+  return {
+      ...state,
+      weightsMethod: action.weightsMethod
+  }
 }
 
 
 const setAlternatives = (state, action) => {
-    return {
-        ...state,
-        alternatives: action.alternatives
-    }
+  return {
+      ...state,
+      alternatives: action.alternatives
+  }
 }
 
 
 const setCriteria = (state, action) => {
-    return {
-        ...state,
-        criteria: action.criteria
-    }
+  return {
+      ...state,
+      criteria: action.criteria
+  }
 }
 
 const setMatrix = (state, action) => {
-    return {
-        ...state,
-        matrix: action.matrix
-    }
+  return {
+      ...state,
+      matrix: action.matrix
+  }
 }
 
 const setMatrixFile = (state, action) => {
-    return {
-        ...state,
-        matrixFile: action.matrixFile
-    }
+  return {
+      ...state,
+      matrixFile: action.matrixFile
+  }
 }
 
 const setPreferenceFunction = (state, action) => {
@@ -126,101 +113,6 @@ const resetForm = (state, action) => {
   return initialState
 }
 
-const getResultsStart = (state, action) => {
-  return {
-    ...state,
-    fetchingResults: true,
-    resultsError: undefined
-  }
-}
-
-const getResultsSuccess = (state, action) => {
-  return {
-    ...state,
-    results: action.results,
-    fetchingResults: false,
-  }
-}
-
-const getResultsFail = (state, action) => {
-  return {
-    ...state,
-    fetchingResults: false,
-    resultsError: action.error
-  }
-}
-
-const setCorrelationsMethod = (state, action) => {
-  return {
-    ...state,
-    correlationsMethod: action.method
-  }
-}
-
-const addCorrelationsElements = (state, action) => {
-  return {
-    ...state,
-    correlationsResults: state.correlationsResults === undefined 
-      ? [action.results]
-      : [...state.correlationsResults, action.results],
-    correlationsRankings: state.correlationsRankings === undefined
-      ? [action.rankings]
-      : [...state.correlationsRankings, action.rankings],
-    labels: state.labels === undefined
-      ? [action.label]
-      : [...state.labels, action.label]
-  }
-}
-
-const removeCorrelationsElements = (state, action) => {
-  const filtered = state.correlationsResults.map(r => JSON.stringify(r)).filter(r => r === JSON.stringify(action.results))
-  const index = state.correlationsResults.map(r => JSON.stringify(r)).indexOf(JSON.stringify(action.results))
-  
-  return {
-    ...state,
-    correlationsResults: [...state.correlationsResults.filter((r, ind) => ind !== index)],
-    correlationsRankings: [...state.correlationsRankings.filter((r, ind) => ind !== index)],
-    labels: [...state.labels.filter((l, ind) => ind !== index)]
-  }
-}
-
-const resetCorrelations = (state, action) => {
-  return {
-    ...state,
-    correlationsMethod: undefined,
-    correlationsResults: undefined,
-    correlationsRankings: undefined,
-    correlations: undefined,
-    labels: undefined,
-    fetchingCorrelations: false,
-    correlationsError: undefined
-  }
-}
-
-const getCorrelationsResultsStart = (state, action) => {
-  return {
-    ...state,
-    fetchingCorrelations: true,
-    correlationsError: undefined
-  }
-}
-
-const getCorrelationsResultsSuccess = (state, action) => {
-  return {
-    ...state,
-    correlations: action.correlations,
-    fetchingCorrelations: false,
-  }
-}
-
-const getCorrelationsResultsFail = (state, action) => {
-  return {
-    ...state,
-    fetchingCorrelations: false,
-    correlationsError: action.error
-  }
-}
-
 export default function calculations (state = initialState, action) {
   switch (action.type) {
     case actions.CALCULATION_SET_METHOD:
@@ -247,29 +139,6 @@ export default function calculations (state = initialState, action) {
       return checkForm(state, action)
     case actions.CALCULATION_RESET_FORM:
       return resetForm(state, action)
-
-    case actions.CALCULATION_RESULTS_START:
-      return getResultsStart(state, action)
-    case actions.CALCULATION_RESULTS_SUCCESS:
-      return getResultsSuccess(state, action)
-    case actions.CALCULATION_RESULTS_FAIL:
-      return getResultsFail(state, action)
-    
-    case actions.CALCULATION_SET_CORRELATIONS_METHOD:
-      return setCorrelationsMethod(state, action)
-    case actions.CALCULATION_ADD_ELEMENTS:
-      return addCorrelationsElements(state, action)
-    case actions.CALCULATION_REMOVE_ELEMENTS:
-      return removeCorrelationsElements(state, action)
-    case actions.CALCULATION_RESET_CORRELATIONS:
-      return resetCorrelations(state, action)
-
-    case actions.CALCULATION_CORRELATIONS_START:
-      return getCorrelationsResultsStart(state, action)
-    case actions.CALCULATION_CORRELATIONS_SUCCESS:
-      return getCorrelationsResultsSuccess(state, action)
-    case actions.CALCULATION_CORRELATIONS_FAIL:
-      return getCorrelationsResultsFail(state, action)
     default:
       return state
   }

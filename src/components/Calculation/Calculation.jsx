@@ -13,7 +13,8 @@ import Summary from './Summary'
 import MyStep from './Step'
 import Results from './Results'
 
-import { checkForm, resetForm, getResults } from './../../data/actions/calculations.js'
+import { checkForm, resetForm } from './../../data/actions/calculations.js'
+import { getResults } from './../../data/actions/results.js'
 
 const useStyles = makeStyles({
   root: {

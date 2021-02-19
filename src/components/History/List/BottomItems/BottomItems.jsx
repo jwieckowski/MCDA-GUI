@@ -8,7 +8,7 @@ import TextField from '@material-ui/core/TextField'
 import MenuItem from '@material-ui/core/MenuItem'
 import ListItem from '@material-ui/core/ListItem'
 
-import { setCorrelationsMethod, getCorrelationsResults, resetCorrelations } from './../../../../data/actions/calculations.js'
+import { setCorrelationsMethod, getCorrelationsResults, resetCorrelations } from './../../../../data/actions/correlations.js'
 
 
 const useStyles = makeStyles({
@@ -34,7 +34,7 @@ const BottomItems = ({ setStorage }) => {
   const dispatch = useDispatch()
   const { t } = useTranslation()
 
-  const { correlationsMethod, correlationsRankings, correlationsResults } = useSelector(state => state.calculations)
+  const { correlationsMethod, correlationsRankings, correlationsResults } = useSelector(state => state.correlations)
   
   const checkCorrectness = () => {
     let message = ''

@@ -48,7 +48,7 @@ const Dashboard = () => {
         </Typography>
       </Grid>
       <Grid className={classes.textContainer}>
-        <Typography variant='body'>
+        <Typography variant='body1'>
           {t('home:gui')}
         </Typography>
       </Grid>

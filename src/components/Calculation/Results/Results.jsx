@@ -55,7 +55,8 @@ const Results = ({ handleReset }) => {
   const { t } = useTranslation()
   const [option, setOption] = useState(false)
 
-  const { method, alternatives, results, fetchingResults, resultsError } = useSelector((state) => state.calculations)
+  const { method, alternatives } = useSelector((state) => state.calculations)
+  const { results, fetchingResults, resultsError } = useSelector((state) => state.results)
 
   const handleSwitch = () => {
     setOption(!option)

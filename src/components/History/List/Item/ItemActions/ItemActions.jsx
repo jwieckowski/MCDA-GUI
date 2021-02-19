@@ -8,7 +8,7 @@ import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline'
 import CheckCircleIcon from '@material-ui/icons/CheckCircle'
 import DeleteIcon from '@material-ui/icons/Delete'
 
-import { addCorrelationsResults, removeCorrelationsResults } from './../../../../../data/actions/calculations.js'
+import { addCorrelationsResults, removeCorrelationsResults } from './../../../../../data/actions/correlations.js'
 
 const checkIfAdded = (correlationsResults, correlationsRankings, labels, results, rankings, method) => {
   if (correlationsResults === undefined) return false
@@ -22,7 +22,7 @@ const ItemActions = ({ method, results, rankings, index, setStorage }) => {
   const dispatch = useDispatch()
   const { t } = useTranslation()
 
-  const { correlationsRankings, correlationsResults, labels } = useSelector(state => state.calculations)
+  const { correlationsRankings, correlationsResults, labels } = useSelector(state => state.correlations)
 
   const handleDelete = () => {
     const storage = JSON.parse(window.localStorage['results']).filter((r, ind) => ind !== index)
