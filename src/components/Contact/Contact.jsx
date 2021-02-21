@@ -34,6 +34,11 @@ const useStyles = makeStyles({
     alignItems: 'center',
     color: 'inherit',
     textDecoration: 'none'
+  },
+  button: {
+    '&:hover': {
+      color: 'black'
+    }
   }
 })
 
@@ -54,7 +59,7 @@ const Contact = () => {
         </Typography>
       </Grid>
       <Grid className={classes.row}>
-        <IconButton >
+        <IconButton className={classes.button}>
           <HomeWorkIcon fontSize='large'/>
         </IconButton>
         <Grid>
@@ -70,7 +75,7 @@ const Contact = () => {
           className={classes.link}
           target="_blank"
         >
-          <IconButton >
+          <IconButton className={classes.button}>
             <LanguageIcon fontSize='large'/>
           </IconButton>
           <Grid>
@@ -79,7 +84,7 @@ const Contact = () => {
         </Link>
       </Grid>
       <Grid className={classes.row}>
-        <IconButton >
+        <IconButton className={classes.button}>
           <MailIcon fontSize='large'/>
         </IconButton>
         <Grid>

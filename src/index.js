@@ -6,14 +6,18 @@ import reportWebVitals from './reportWebVitals'
 import { BrowserRouter, Route } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import store from './store.js'
+import { ThemeProvider } from '@material-ui/styles'
+import theme from './constants/theme.js'
 import './i18n.js'
 
 ReactDOM.render(
-  <BrowserRouter>
-    <Provider store={store}>
-      <Route component={App} />
-    </Provider>
-  </BrowserRouter>,
+  <ThemeProvider theme={theme}>
+    <BrowserRouter>
+      <Provider store={store}>
+        <Route component={App} />
+      </Provider>
+    </BrowserRouter>
+  </ThemeProvider>,
   document.getElementById('root')
 )
 

@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles'
 const useStyles = makeStyles({
   panel: {
     width: '80%',
-    height: '95%',
+    height: '95%'
   },
   label: {
     width: '100%',
@@ -20,10 +20,11 @@ const useStyles = makeStyles({
     overflow: 'auto',
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   image: {
-    minWidth: '300px'
+    minWidth: '40%',
+    height: 'auto'
   }
 })
 
