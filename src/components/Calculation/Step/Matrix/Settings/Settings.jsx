@@ -65,7 +65,7 @@ const Settings = () => {
       <FormControlLabel
         control={
           <Switch
-            checked={option === undefined ? false : option}
+            checked={option ?? false}
             onChange={handleSwitch}
             name="Upload file"
             color="primary"
@@ -85,7 +85,7 @@ const Settings = () => {
             inputProps={{
                 min: 1
             }}
-            value={alternatives === undefined ? '' : alternatives}
+            value={alternatives ?? ''}
             variant="outlined"
             className={classes.numberInput}
             onChange={handleAlternatives}
@@ -99,7 +99,7 @@ const Settings = () => {
             inputProps={{
                 min: 1
             }}
-            value={criteria === undefined ? '' : criteria}
+            value={criteria ?? ''}
             variant="outlined"
             className={classes.numberInput}
             onChange={handleCriteria}

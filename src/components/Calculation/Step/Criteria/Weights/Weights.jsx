@@ -92,7 +92,7 @@ const Weights = ({ option }) => {
             ?  getWeightsColumns().map(column => column)
             : <TextField
                 select
-                value={weightsMethod === undefined ? '' : weightsMethod}
+                value={weightsMethod ?? ''}
                 onChange={handleSelect}
                 variant="outlined"
                 className={classes.select}

@@ -42,8 +42,8 @@ const Normalization = () => {
 
   const getValue = () => {
     return method !== 'PROMETHEE'
-      ? normalization === undefined ? '' : normalization
-      : preferenceFunction === undefined ? '' : preferenceFunction
+      ? normalization ?? ''
+      : preferenceFunction ?? ''
   }
 
   const getItems = (array) => {

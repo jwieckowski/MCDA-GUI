@@ -43,6 +43,7 @@ const Calculation = () => {
 
   const { method, normalization, alternatives, criteria, matrix, matrixFile, weightsValue, weightsType, weightsMethod, preferenceFunction, formFilled } = useSelector((state) => state.calculations)
 
+  
   const [steps, setSteps] = useState(initialSteps)
   const [activeStep, setActiveStep] = React.useState(0)
 

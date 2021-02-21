@@ -42,7 +42,7 @@ const Method = () => {
       <TextField
           select
           label={t('calculation:step1')}
-          value={method === undefined ? '' : method}
+          value={method ?? ''}
           onChange={handleChange}
           variant="outlined"
           className={classes.input}
