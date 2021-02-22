@@ -14,8 +14,8 @@ const useStyles = makeStyles(theme => ({
 const Layout = ({ children }) => {
   const classes = useStyles()
   return (
-    <Grid container maxwidth='xs' className={classes.root}>
-      <Menu />
+    <Grid container maxwidth='xs' className={classes.root} data-testid='layout-id'>
+      <Menu/>
       { children }
     </Grid>
   )

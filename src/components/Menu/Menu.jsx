@@ -49,7 +49,7 @@ const Menu = () => {
   }
 
   return (
-    <Grid className={classes.root}>
+    <Grid className={classes.root} data-testid='menu-id'>
       <Breadcrumbs aria-label='breadcrumb'>
         {paths.map((path, index) => {
           return (

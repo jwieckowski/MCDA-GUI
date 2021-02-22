@@ -27,7 +27,7 @@ const Methods = () => {
   }
 
   return (
-    <Grid className={classes.root}>
+    <Grid className={classes.root} data-testid='methods-id'>
       <Tabs
         orientation="vertical"
         variant="scrollable"
@@ -36,9 +36,9 @@ const Methods = () => {
         aria-label="Method tabs"
         className={classes.tabs}
       >
-        {methods.map(method => {
+        {methods.map((method, index) => {
           return (
-            <Tab label={method.method} key={method.id}/>
+            <Tab label={method.method} key={method.id} data-testid={`tab${index}`}/>
           )
         })}
       </Tabs>
@@ -51,6 +51,7 @@ const Methods = () => {
             method={method.method}
             abbreviation={method.abbreviation}
             images={method.images}
+            data-testid={`panel${index}`}
           />
         )
       })}

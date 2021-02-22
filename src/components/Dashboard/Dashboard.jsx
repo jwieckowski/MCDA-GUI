@@ -41,7 +41,7 @@ const Dashboard = () => {
   const { t } = useTranslation()
 
   return (
-    <Grid className={classes.root}>
+    <Grid className={classes.root} data-testid='dashboard-id'>
       <Grid className={classes.textContainer}>
         <Typography>
           {t('home:mcda')}

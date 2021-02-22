@@ -47,7 +47,7 @@ const Contact = () => {
   const { t } = useTranslation()
 
   return (
-    <Grid className={classes.root}>
+    <Grid className={classes.root} data-testid='contact-id'>
       <Grid className={classes.text}>
         <Typography>
           {t('contact:about')}
@@ -74,6 +74,7 @@ const Contact = () => {
           to={{ pathname: 'http://comet.edu.pl/' }}
           className={classes.link}
           target="_blank"
+          data-testid='link-id'
         >
           <IconButton className={classes.button}>
             <LanguageIcon fontSize='large'/>
