@@ -3,7 +3,7 @@ import pymcdm
 mcda_methods = {
     'topsis': pymcdm.methods.TOPSIS,
     'vikor': pymcdm.methods.VIKOR,
-    'promethee': pymcdm.methods.PROMEHTEE_II,
+    'promethee': pymcdm.methods.PROMETHEE_II,
     'copras': pymcdm.methods.COPRAS,
     'spotis': pymcdm.methods.SPOTIS,
     'comet': pymcdm.methods.COMET

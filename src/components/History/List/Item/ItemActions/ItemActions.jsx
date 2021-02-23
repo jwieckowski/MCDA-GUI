@@ -8,7 +8,7 @@ import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline'
 import CheckCircleIcon from '@material-ui/icons/CheckCircle'
 import DeleteIcon from '@material-ui/icons/Delete'
 
-import { addCorrelationsResults, removeCorrelationsResults } from './../../../../../data/actions/correlations.js'
+import { resetCorrelations, addCorrelationsResults, removeCorrelationsResults } from './../../../../../data/actions/correlations.js'
 
 const checkIfAdded = (correlationsResults, correlationsRankings, labels, results, rankings, method) => {
   if (correlationsResults === undefined) return false
@@ -22,25 +22,41 @@ const ItemActions = ({ method, results, rankings, index, setStorage }) => {
   const dispatch = useDispatch()
   const { t } = useTranslation()
 
-  const { correlationsRankings, correlationsResults, labels } = useSelector(state => state.correlations)
+  const { correlations, correlationsRankings, correlationsResults, labels } = useSelector(state => state.correlations)
+
+  const handleStateChange = () => {
+    if (!correlations) return false
+    dispatch(resetCorrelations())
+    return true
+  } 
 
   const handleDelete = () => {
+    handleStateChange()
     const storage = JSON.parse(window.localStorage['results']).filter((r, ind) => ind !== index)
     window.localStorage.setItem('results', JSON.stringify(storage))
     setStorage(JSON.parse(window.localStorage['results']))
   }
-  const handleAdd = () => {
-    if (correlationsRankings !== undefined && JSON.stringify(correlationsRankings) !== JSON.stringify([]) && correlationsRankings[0].length !== rankings.length) {
-      window.alert(t('history:cant-compare'))
-      return
-    } 
+
+  const handleRemove = (reset) => {
+    if (reset) return
+    dispatch(removeCorrelationsResults(results, rankings, method))
+  }
+
+  const handleAdd = (reset) => {
+    if (!reset) {
+      if (correlationsRankings !== undefined && JSON.stringify(correlationsRankings) !== JSON.stringify([]) && correlationsRankings[0].length !== rankings.length) {
+        window.alert(t('history:cant-compare'))
+        return
+      } 
+    }
     dispatch(addCorrelationsResults(results, rankings, method))
   }
 
   const handleClick = () => {
+    const reset = handleStateChange()
     checkIfAdded(correlationsResults, correlationsRankings, labels, results, rankings, method)
-      ? dispatch(removeCorrelationsResults(results, rankings, method)) 
-      : handleAdd()
+      ? handleRemove(reset) 
+      : handleAdd(reset)
   }
 
   return (
